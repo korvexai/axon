@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXON — Dev OS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,400;0,700;1,400&family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap');
+:root {
+--bg:       #060a0e;
+--bg2:      #0a1018;
+--bg3:      #0f1923;
+--bg4:      #141f2a;
+--teal:     #00e5c8;
+--teal2:    #00b8a0;
+--teal-dim: rgba(0,229,200,0.08);
+--teal-glow:rgba(0,229,200,0.25);
+--red:      #ff3d5a;
+--yellow:   #ffc107;
+--green:    #00e5c8;
+--border:   #1a2a38;
+--border2:  #0f1e2a;
+--text:     #8fa8bc;
+--text2:    #c8dce8;
+--bright:   #e8f4ff;
+--dim:      #3a5068;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+background: var(--bg);
+color: var(--text);
+font-family: 'DM Sans', sans-serif;
+height: 100vh;
+overflow: hidden;
+cursor: default;
+}
+/* SCANLINES */
+body::after {
+content:'';
+position:fixed;inset:0;
+background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,229,200,0.012) 3px,rgba(0,229,200,0.012) 4px);
+pointer-events:none;z-index:9999;
+}
+/* LAYOUT */
+.app {
+display: grid;
+grid-template-columns: 64px 200px 1fr 300px;
+grid-template-rows: 52px 1fr 32px;
+height: 100vh;
+}
+/* ═══ ICON BAR ═══ */
+.iconbar {
+grid-row: 1 / -1;
+background: var(--bg2);
+border-right: 1px solid var(--border2);
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 14px 0;
+gap: 6px;
+z-index: 10;
+}
+.logo-mark {
+font-family: 'Orbitron', monospace;
+font-size: 15px;
+font-weight: 900;
+color: var(--teal);
+text-shadow: 0 0 20px var(--teal-glow), 0 0 40px rgba(0,229,200,0.1);
+letter-spacing: 1px;
+margin-bottom: 16px;
+writing-mode: vertical-rl;
+text-orientation: mixed;
+transform: rotate(180deg);
+}
+.icon-btn {
+width: 40px; height: 40px;
+border-radius: 8px;
+display: flex;align-items:center;justify-content:center;
+cursor: pointer;
+font-size: 16px;
+color: var(--dim);
+transition: all 0.15s;
+border: 1px solid transparent;
+position: relative;
+}
+.icon-btn:hover { background: var(--teal-dim); color: var(--teal); border-color: rgba(0,229,200,0.15); }
+.icon-btn.active { background: var(--teal-dim); color: var(--teal); border-color: rgba(0,229,200,0.3); box-shadow: 0 0 12px rgba(0,229,200,0.1); }
+.icon-btn .ibadge {
+position:absolute;top:4px;right:4px;
+width:8px;height:8px;border-radius:50%;
+background:var(--red);box-shadow:0 0 6px var(--red);
+animation: pulse 2s infinite;
+}
+.icon-sep { width:24px;height:1px;background:var(--border2);margin:6px 0; }
+.icon-btn-tooltip {
+position:absolute;left:52px;
+background:var(--bg3);border:1px solid var(--border);
+padding:4px 10px;border-radius:4px;
+font-family:'JetBrains Mono',monospace;font-size:10px;
+color:var(--text2);white-space:nowrap;
+opacity:0;pointer-events:none;transition:opacity 0.15s;
+z-index:100;
+}
+.icon-btn:hover .icon-btn-tooltip { opacity:1; }
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+background: var(--bg2);
+border-right: 1px solid var(--border2);
+overflow-y: auto;
+padding: 0;
+display: flex;
+flex-direction: column;
+}
+.sidebar-section {
+padding: 16px 12px 8px;
+border-bottom: 1px solid var(--border2);
+}
+.sidebar-label {
+font-family: 'JetBrains Mono', monospace;
+font-size: 8px;
+letter-spacing: 3px;
+color: var(--dim);
+margin-bottom: 8px;
+padding-left: 8px;
+}
+.nav-item {
+display:flex;align-items:center;gap:9px;
+padding:8px 8px;border-radius:6px;
+cursor:pointer;font-size:13px;color:var(--text);
+transition:all 0.12s;border:1px solid transparent;
+position:relative;
+}
+.nav-item:hover { background:var(--teal-dim);color:var(--text2); }
+.nav-item.active {
+background:var(--teal-dim);color:var(--teal);
+border-color:rgba(0,229,200,0.2);
+}
+.nav-item.active::before {
+content:'';position:absolute;left:0;top:20%;bottom:20%;
+width:2px;background:var(--teal);border-radius:0 2px 2px 0;
+box-shadow:0 0 8px var(--teal);
+}
+.ni-icon { font-size:13px;width:16px;text-align:center;flex-shrink:0; }
+.ni-badge {
+margin-left:auto;background:var(--red);color:#fff;
+font-family:'JetBrains Mono',monospace;font-size:9px;
+padding:1px 5px;border-radius:3px;
+box-shadow:0 0 6px rgba(255,61,90,0.4);
+}
+.ni-badge.teal { background:var(--teal);color:#000;box-shadow:0 0 6px var(--teal-glow); }
+/* Worker list */
+.worker-list { padding:0 4px; }
+.worker-row {
+display:flex;align-items:center;gap:8px;
+padding:5px 4px;border-bottom:1px solid var(--border2);
+font-family:'JetBrains Mono',monospace;font-size:10px;
+}
+.w-dot { width:6px;height:6px;border-radius:50%;flex-shrink:0; }
+.w-dot.run { background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite; }
+.w-dot.idle { background:var(--dim); }
+.w-dot.err { background:var(--red);box-shadow:0 0 6px var(--red); }
+.w-name { flex:1;color:var(--text); }
+.w-status { color:var(--dim);font-size:9px; }
+.w-status.run { color:var(--teal); }
+.w-status.err { color:var(--red); }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+/* ═══ TOPBAR ═══ */
+.topbar {
+grid-column: 2 / -1;
+background: var(--bg2);
+border-bottom: 1px solid var(--border2);
+display:flex;align-items:center;
+padding:0 20px;gap:20px;
+}
+.topbar-title {
+font-family:'JetBrains Mono',monospace;
+font-size:11px;color:var(--teal);letter-spacing:2px;
+}
+.topbar-path {
+font-family:'JetBrains Mono',monospace;
+font-size:10px;color:var(--dim);
+}
+.topbar-right { margin-left:auto;display:flex;gap:12px;align-items:center; }
+.sys-chip {
+display:flex;align-items:center;gap:5px;
+font-family:'JetBrains Mono',monospace;font-size:10px;
+color:var(--dim);
+}
+.sys-chip .val { color:var(--text2); }
+.status-pill {
+display:flex;align-items:center;gap:5px;
+padding:3px 10px;border-radius:20px;
+font-family:'JetBrains Mono',monospace;font-size:9px;
+letter-spacing:1px;
+}
+.status-pill.online { background:rgba(0,229,200,0.08);border:1px solid rgba(0,229,200,0.25);color:var(--teal); }
+.status-pill.warn { background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.25);color:var(--yellow); }
+/* ═══ MAIN CONTENT ═══ */
+.main-content {
+overflow:hidden;
+position:relative;
+background: var(--bg);
+}
+/* Pages */
+.page { display:none;height:100%;overflow-y:auto;padding:20px; }
+.page.active { display:flex;flex-direction:column;gap:16px; }
+/* ═══ DASHBOARD PAGE ═══ */
+.stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:12px; }
+.stat-card {
+background:var(--bg2);border:1px solid var(--border);
+border-radius:8px;padding:16px;position:relative;overflow:hidden;
+transition:border-color 0.2s;
+}
+.stat-card:hover { border-color:rgba(0,229,200,0.25); }
+.stat-card::after {
+content:'';position:absolute;top:0;left:0;right:0;height:1px;
+background:linear-gradient(90deg,transparent,var(--teal),transparent);
+opacity:0;transition:opacity 0.3s;
+}
+.stat-card:hover::after { opacity:0.6; }
+.sc-label { font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--dim);margin-bottom:8px; }
+.sc-value {
+font-family:'Orbitron',monospace;font-size:28px;font-weight:700;
+color:var(--bright);line-height:1;margin-bottom:4px;
+}
+.sc-value.teal { color:var(--teal);text-shadow:0 0 20px rgba(0,229,200,0.3); }
+.sc-value.red { color:var(--red);text-shadow:0 0 20px rgba(255,61,90,0.3); }
+.sc-value.yellow { color:var(--yellow); }
+.sc-sub { font-size:11px;color:var(--dim); }
+.sc-bar { height:2px;background:var(--border);border-radius:1px;margin-top:10px;overflow:hidden; }
+.sc-fill { height:100%;background:var(--teal);box-shadow:0 0 6px var(--teal);border-radius:1px; }
+.sc-fill.red { background:var(--red);box-shadow:0 0 6px var(--red); }
+.sc-fill.yellow { background:var(--yellow); }
+/* Mid row */
+.mid-row { display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-height:0; }
+.panel {
+background:var(--bg2);border:1px solid var(--border);
+border-radius:8px;overflow:hidden;display:flex;flex-direction:column;
+}
+.panel-head {
+padding:10px 14px;border-bottom:1px solid var(--border2);
+display:flex;align-items:center;gap:8px;
+font-family:'JetBrains Mono',monospace;font-size:9px;
+letter-spacing:2px;color:var(--dim);
+}
+.panel-head .ph-dot { width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal); }
+.panel-body { flex:1;overflow-y:auto;padding:10px 14px; }
+/* Log lines */
+.log-line {
+display:flex;gap:10px;padding:2px 0;
+font-family:'JetBrains Mono',monospace;font-size:11px;
+line-height:1.6;
+}
+.ll-time { color:var(--dim);min-width:42px;flex-shrink:0; }
+.ll-src { min-width:32px;flex-shrink:0; }
+.ll-src.sys { color:var(--teal); }
+.ll-src.rag { color:#a78bfa; }
+.ll-src.bld { color:var(--yellow); }
+.ll-src.err { color:var(--red); }
+.ll-src.ai  { color:#38bdf8; }
+.ll-src.tg  { color:#34d399; }
+.ll-text { color:var(--text);flex:1; }
+.ll-text.ok  { color:var(--teal); }
+.ll-text.err { color:var(--red); }
+.ll-text.warn{ color:var(--yellow); }
+.ll-text.sys { color:var(--teal); }
+.ll-text.dim { color:var(--dim); }
+/* RAG table */
+.rag-row {
+display:flex;align-items:center;gap:10px;
+padding:7px 0;border-bottom:1px solid var(--border2);
+font-size:12px;
+}
+.rag-row:last-child { border-bottom:none; }
+.rr-icon { font-size:14px;width:18px;flex-shrink:0; }
+.rr-name { font-family:'JetBrains Mono',monospace;color:var(--text2);flex:1;font-size:11px; }
+.rr-count { font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);min-width:70px;text-align:right; }
+.rr-bar { width:72px;height:2px;background:var(--border);border-radius:1px;overflow:hidden;flex-shrink:0; }
+.rr-fill { height:100%;background:var(--teal);box-shadow:0 0 5px var(--teal); }
+/* Build bar */
+.build-strip {
+background:var(--bg2);border:1px solid var(--border);
+border-radius:8px;padding:12px 16px;
+display:flex;align-items:center;gap:14px;
+}
+.bs-label { font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:2px; }
+.bs-name { font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--teal); }
+.bs-info { font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim); }
+.bs-btn {
+margin-left:auto;
+padding:6px 16px;border-radius:5px;
+font-family:'JetBrains Mono',monospace;font-size:10px;
+letter-spacing:1px;cursor:pointer;border:1px solid;
+transition:all 0.15s;
+}
+.bs-btn.teal { background:rgba(0,229,200,0.08);border-color:rgba(0,229,200,0.3);color:var(--teal); }
+.bs-btn.teal:hover { background:rgba(0,229,200,0.16); }
+.bs-btn.red { background:rgba(255,61,90,0.08);border-color:rgba(255,61,90,0.3);color:var(--red); }
+/* Phase tracker */
+.phase-grid { display:flex;flex-direction:column;gap:4px;padding:2px 0; }
+.phase-row {
+display:flex;align-items:center;gap:8px;
+padding:6px 10px;border-radius:5px;border:1px solid var(--border2);
+background:var(--bg3);
+}
+.pr-num { font-family:'Orbitron',monospace;font-size:14px;color:var(--dim);width:16px;text-align:center; }
+.pr-name { flex:1;font-size:12px;color:var(--text); }
+.pr-status { font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px; }
+.prs-done { color:var(--teal); }
+.prs-active { color:var(--yellow); }
+.prs-pending { color:var(--dim); }
+/* ═══ CHATBOT PAGE ═══ */
+.chat-layout { display:flex;flex-direction:column;height:100%;padding:0; }
+.chat-header {
+padding:14px 20px;border-bottom:1px solid var(--border2);
+display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.chat-avatar {
+width:32px;height:32px;border-radius:8px;
+background:var(--teal-dim);border:1px solid rgba(0,229,200,0.3);
+display:flex;align-items:center;justify-content:center;
+font-size:14px;color:var(--teal);
+}
+.chat-name { font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2); }
+.chat-sub { font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim); }
+.chat-model-select {
+margin-left:auto;
+background:var(--bg3);border:1px solid var(--border);
+color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:10px;
+padding:4px 10px;border-radius:5px;cursor:pointer;
+outline:none;
+}
+.chat-messages {
+flex:1;overflow-y:auto;padding:20px;
+display:flex;flex-direction:column;gap:16px;
+}
+.chat-msg { display:flex;gap:10px;max-width:85%;animation: msgIn 0.25s ease; }
+@keyframes msgIn { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
+.chat-msg.user { align-self:flex-end;flex-direction:row-reverse; }
+.msg-avatar {
+width:28px;height:28px;border-radius:6px;flex-shrink:0;
+display:flex;align-items:center;justify-content:center;font-size:12px;
+border:1px solid var(--border);
+}
+.msg-avatar.ai { background:var(--teal-dim);border-color:rgba(0,229,200,0.2);color:var(--teal); }
+.msg-avatar.user-av { background:var(--bg3);color:var(--text2); }
+.msg-bubble {
+padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.6;
+position:relative;
+}
+.chat-msg.ai .msg-bubble {
+background:var(--bg3);border:1px solid var(--border);color:var(--text2);
+border-top-left-radius:2px;
+}
+.chat-msg.user .msg-bubble {
+background:var(--teal-dim);border:1px solid rgba(0,229,200,0.25);color:var(--teal);
+border-top-right-radius:2px;font-family:'JetBrains Mono',monospace;font-size:12px;
+}
+.msg-code {
+background:var(--bg2);border:1px solid var(--border);border-radius:5px;
+padding:10px;margin-top:8px;
+font-family:'JetBrains Mono',monospace;font-size:11px;color:#a78bfa;
+overflow-x:auto;white-space:pre;
+}
+.msg-time { font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-top:4px; }
+.chat-actions {
+display:flex;gap:8px;padding:8px 0;flex-wrap:wrap;
+}
+.action-chip {
+padding:4px 10px;border-radius:20px;
+border:1px solid var(--border);background:var(--bg3);
+font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text);
+cursor:pointer;transition:all 0.12s;
+}
+.action-chip:hover { border-color:rgba(0,229,200,0.3);color:var(--teal);background:var(--teal-dim); }
+.chat-input-area {
+padding:14px 20px;border-top:1px solid var(--border2);flex-shrink:0;
+}
+.chat-input-box {
+display:flex;align-items:flex-end;gap:10px;
+background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+padding:10px 14px;transition:border-color 0.2s;
+}
+.chat-input-box:focus-within { border-color:rgba(0,229,200,0.3); }
+.chat-input-box textarea {
+flex:1;background:none;border:none;outline:none;
+font-family:'DM Sans',sans-serif;font-size:13px;
+color:var(--bright);resize:none;min-height:20px;max-height:120px;
+line-height:1.5;
+}
+.chat-input-box textarea::placeholder { color:var(--dim); }
+.send-btn {
+width:34px;height:34px;border-radius:7px;
+background:var(--teal);border:none;cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+color:#000;font-size:15px;flex-shrink:0;
+transition:all 0.15s;box-shadow:0 0 12px rgba(0,229,200,0.2);
+}
+.send-btn:hover { transform:scale(1.05);box-shadow:0 0 20px rgba(0,229,200,0.35); }
+.send-btn:disabled { background:var(--dim);cursor:not-allowed;box-shadow:none;transform:none; }
+.typing-indicator { display:flex;gap:4px;align-items:center;padding:4px 0; }
+.typing-dot { width:6px;height:6px;border-radius:50%;background:var(--teal); }
+.typing-dot:nth-child(1){animation:td 1.2s 0s infinite}
+.typing-dot:nth-child(2){animation:td 1.2s 0.2s infinite}
+.typing-dot:nth-child(3){animation:td 1.2s 0.4s infinite}
+@keyframes td{0%,80%,100%{transform:scale(1);opacity:0.4}40%{transform:scale(1.3);opacity:1}}
+/* ═══ SENTINEL PAGE ═══ */
+.alert-list { display:flex;flex-direction:column;gap:10px; }
+.alert-card {
+background:var(--bg2);border-radius:8px;border:1px solid;
+padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+position:relative;overflow:hidden;
+animation: alertIn 0.3s ease;
+}
+@keyframes alertIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.alert-card.crit { border-color:rgba(255,61,90,0.3);background:rgba(255,61,90,0.04); }
+.alert-card.warn { border-color:rgba(255,193,7,0.2);background:rgba(255,193,7,0.03); }
+.alert-card.info { border-color:rgba(0,229,200,0.2);background:rgba(0,229,200,0.03); }
+.alert-card.ok   { border-color:rgba(0,229,200,0.15);background:rgba(0,229,200,0.02); }
+.alert-card::before {
+content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+}
+.alert-card.crit::before { background:var(--red);box-shadow:0 0 8px var(--red); }
+.alert-card.warn::before { background:var(--yellow); }
+.alert-card.info::before { background:var(--teal); }
+.alert-card.ok::before   { background:var(--teal);opacity:0.4; }
+.ac-icon { font-size:18px;flex-shrink:0;margin-top:1px; }
+.ac-body { flex:1; }
+.ac-title { font-weight:500;color:var(--bright);font-size:13px;margin-bottom:3px; }
+.ac-msg { font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:8px; }
+.ac-log {
+background:var(--bg3);border:1px solid var(--border2);border-radius:4px;
+padding:8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text);
+margin-bottom:8px;max-height:80px;overflow-y:auto;
+}
+.ac-actions { display:flex;gap:8px; }
+.ac-btn {
+padding:4px 12px;border-radius:4px;
+font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;
+cursor:pointer;border:1px solid;transition:all 0.15s;
+}
+.ac-btn.teal { background:rgba(0,229,200,0.08);border-color:rgba(0,229,200,0.3);color:var(--teal); }
+.ac-btn.teal:hover { background:rgba(0,229,200,0.18); }
+.ac-btn.ghost { background:transparent;border-color:var(--border);color:var(--dim); }
+.ac-btn.ghost:hover { border-color:var(--text);color:var(--text); }
+.ac-btn.red { background:rgba(255,61,90,0.08);border-color:rgba(255,61,90,0.3);color:var(--red); }
+.ac-meta { font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-left:auto;margin-top:2px; }
+/* Sentinel header */
+.sentinel-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px; }
+/* ═══ RAG PAGE ═══ */
+.rag-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:12px; }
+.rag-search {
+display:flex;align-items:center;gap:10px;
+background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+padding:10px 14px;transition:border-color 0.2s;
+}
+.rag-search:focus-within { border-color:rgba(0,229,200,0.3); }
+.rag-search-icon { color:var(--dim);font-size:14px; }
+.rag-search input {
+flex:1;background:none;border:none;outline:none;
+font-family:'JetBrains Mono',monospace;font-size:12px;
+color:var(--bright);
+}
+.rag-search input::placeholder { color:var(--dim); }
+.rag-table {
+background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+overflow:hidden;
+}
+.rt-head {
+display:grid;grid-template-columns:2fr 1fr 1fr 80px;
+padding:8px 14px;border-bottom:1px solid var(--border2);
+font-family:'JetBrains Mono',monospace;font-size:9px;
+letter-spacing:2px;color:var(--dim);
+}
+.rt-row {
+display:grid;grid-template-columns:2fr 1fr 1fr 80px;
+padding:9px 14px;border-bottom:1px solid var(--border2);
+align-items:center;transition:background 0.12s;cursor:pointer;
+font-size:12px;
+}
+.rt-row:last-child{border-bottom:none;}
+.rt-row:hover{background:var(--teal-dim);}
+.rt-name{display:flex;align-items:center;gap:8px;color:var(--text2);}
+.rt-lang{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:3px;}
+.rt-lang.rust{background:rgba(255,100,50,0.1);color:#ff6432;border:1px solid rgba(255,100,50,0.2);}
+.rt-lang.next{background:rgba(0,229,200,0.08);color:var(--teal);border:1px solid rgba(0,229,200,0.2);}
+.rt-lang.log{background:rgba(255,193,7,0.08);color:var(--yellow);border:1px solid rgba(255,193,7,0.2);}
+.rt-lang.cfg{background:rgba(167,139,250,0.08);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);}
+.rt-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);}
+.rt-size{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);}
+.rt-bar-wrap{display:flex;align-items:center;gap:6px;}
+.rt-mini-bar{flex:1;height:3px;background:var(--border);border-radius:1px;overflow:hidden;}
+.rt-mini-fill{height:100%;background:var(--teal);box-shadow:0 0 4px var(--teal);}
+/* ═══ SETTINGS PAGE ═══ */
+.settings-grid { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+.settings-section {
+background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+overflow:hidden;
+}
+.ss-head {
+padding:10px 16px;border-bottom:1px solid var(--border2);
+font-family:'JetBrains Mono',monospace;font-size:9px;
+letter-spacing:2px;color:var(--dim);
+}
+.ss-body { padding:14px 16px;display:flex;flex-direction:column;gap:12px; }
+.setting-row { display:flex;align-items:center;gap:10px; }
+.sr-label { flex:1;font-size:13px;color:var(--text2); }
+.sr-sub { font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim); }
+.toggle {
+width:40px;height:22px;border-radius:11px;
+border:1px solid var(--border);background:var(--bg3);
+cursor:pointer;position:relative;transition:all 0.2s;flex-shrink:0;
+}
+.toggle.on { background:var(--teal-dim);border-color:rgba(0,229,200,0.4); }
+.toggle::after {
+content:'';position:absolute;top:3px;left:3px;
+width:14px;height:14px;border-radius:50%;
+background:var(--dim);transition:all 0.2s;
+}
+.toggle.on::after { left:21px;background:var(--teal);box-shadow:0 0 6px var(--teal); }
+.settings-input {
+background:var(--bg3);border:1px solid var(--border);border-radius:5px;
+padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;
+color:var(--text2);outline:none;width:100%;transition:border-color 0.15s;
+}
+.settings-input:focus { border-color:rgba(0,229,200,0.3); }
+.settings-select {
+background:var(--bg3);border:1px solid var(--border);border-radius:5px;
+padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;
+color:var(--text2);outline:none;cursor:pointer;
+}
+/* ═══ KNOWLEDGE GRAPH PAGE ═══ */
+.graph-container {
+background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+flex:1;position:relative;overflow:hidden;
+}
+#kg-canvas { width:100%;height:100%; }
+.kg-legend {
+position:absolute;top:12px;right:12px;
+background:rgba(10,16,24,0.85);border:1px solid var(--border);
+border-radius:6px;padding:10px 14px;
+display:flex;flex-direction:column;gap:6px;
+}
+.kl-item { display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text); }
+.kl-dot { width:8px;height:8px;border-radius:50%; }
+/* ═══ RIGHT PANEL ═══ */
+.right-panel {
+background:var(--bg2);border-left:1px solid var(--border2);
+overflow-y:auto;display:flex;flex-direction:column;
+}
+.rp-section { padding:14px;border-bottom:1px solid var(--border2); }
+.rp-label {
+font-family:'JetBrains Mono',monospace;font-size:8px;
+letter-spacing:3px;color:var(--dim);margin-bottom:10px;
+}
+/* Alerts mini */
+.alert-mini {
+display:flex;gap:8px;padding:8px 10px;border-radius:5px;
+border:1px solid;margin-bottom:6px;font-size:12px;cursor:pointer;
+transition:all 0.12s;
+}
+.alert-mini.crit{border-color:rgba(255,61,90,0.25);background:rgba(255,61,90,0.04);}
+.alert-mini.warn{border-color:rgba(255,193,7,0.2);background:rgba(255,193,7,0.03);}
+.alert-mini.info{border-color:rgba(0,229,200,0.2);background:rgba(0,229,200,0.03);}
+.alert-mini.ok  {border-color:rgba(0,229,200,0.1);background:transparent;}
+.am-icon{font-size:13px;flex-shrink:0;}
+.am-body{flex:1;}
+.am-title{color:var(--text2);font-size:12px;margin-bottom:1px;}
+.am-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);}
+.am-action {
+margin-left:auto;align-self:center;
+padding:2px 8px;border-radius:3px;border:1px solid;
+font-family:'JetBrains Mono',monospace;font-size:8px;
+cursor:pointer;transition:all 0.12s;
+}
+.am-action.t{border-color:rgba(0,229,200,0.3);color:var(--teal);}
+.am-action.t:hover{background:var(--teal-dim);}
+/* System mini */
+.sys-metrics { display:grid;grid-template-columns:1fr 1fr;gap:6px; }
+.sm-box {
+background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:8px;
+}
+.sm-label { font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:3px; }
+.sm-val { font-family:'Orbitron',monospace;font-size:18px;color:var(--bright);line-height:1; }
+.sm-bar { height:2px;background:var(--border);border-radius:1px;margin-top:5px;overflow:hidden; }
+.sm-fill { height:100%;background:var(--teal);box-shadow:0 0 4px var(--teal); }
+/* Telegram feed */
+.tg-msg {
+display:flex;gap:8px;padding:7px 0;
+border-bottom:1px solid var(--border2);font-size:12px;
+}
+.tg-icon{font-size:14px;flex-shrink:0;}
+.tg-body{flex:1;}
+.tg-text{color:var(--text2);margin-bottom:2px;}
+.tg-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);}
+/* ═══ STATUS BAR ═══ */
+.statusbar {
+grid-column:2/-1;
+background:var(--bg2);border-top:1px solid var(--border2);
+display:flex;align-items:center;padding:0 14px;gap:20px;
+font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);
+}
+.sb-item{display:flex;align-items:center;gap:5px;}
+.sb-dot{width:5px;height:5px;border-radius:50%;}
+.sb-dot.teal{background:var(--teal);box-shadow:0 0 5px var(--teal);}
+.sb-dot.red{background:var(--red);}
+.sb-dot.yellow{background:var(--yellow);}
+.sb-right{margin-left:auto;display:flex;gap:16px;}
+/* SCROLL */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+/* PAGE ANIM */
+.page.active { animation:pageIn 0.2s ease; }
+@keyframes pageIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- ═══ ICON BAR ═══ -->
+<div class="iconbar">
+<div class="logo-mark">AX</div>
+<div class="icon-btn active" onclick="switchPage('dashboard')" id="ib-dashboard">
+⬡<span class="icon-btn-tooltip">Dashboard</span>
+</div>
+<div class="icon-btn" onclick="switchPage('chat')" id="ib-chat">
+◎<span class="icon-btn-tooltip">AI Chat</span>
+</div>
+<div class="icon-btn" onclick="switchPage('sentinel')" id="ib-sentinel">
+⚠<span class="icon-btn-tooltip">Sentinel</span>
+<div class="ibadge"></div>
+</div>
+<div class="icon-btn" onclick="switchPage('rag')" id="ib-rag">
+◈<span class="icon-btn-tooltip">RAG Index</span>
+</div>
+<div class="icon-btn" onclick="switchPage('graph')" id="ib-graph">
+⊹<span class="icon-btn-tooltip">Knowledge Graph</span>
+</div>
+<div class="icon-sep"></div>
+<div class="icon-btn" onclick="switchPage('settings')" id="ib-settings">
+⚙<span class="icon-btn-tooltip">Settings</span>
+</div>
+</div>
+<!-- ═══ TOPBAR ═══ -->
+<div class="topbar">
+<div>
+<div class="topbar-title" id="page-title">DASHBOARD</div>
+<div class="topbar-path">/workspace/axon_core · axon_state.json</div>
+</div>
+<div class="topbar-right">
+<div class="sys-chip">CPU <span class="val" id="cpu-top">34%</span></div>
+<div class="sys-chip">VRAM <span class="val">5.2G</span></div>
+<div class="sys-chip">RAM <span class="val" id="ram-top">11.4G</span></div>
+<div class="status-pill online"><span style="width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite"></span>ONLINE</div>
+<div class="status-pill warn"><span style="width:6px;height:6px;border-radius:50%;background:var(--yellow)"></span>BUILD ERR</div>
+</div>
+</div>
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-label">NAVIGATE</div>
+<div class="nav-item active" onclick="switchPage('dashboard')" id="nav-dashboard">
+<span class="ni-icon">⬡</span> Dashboard
+</div>
+<div class="nav-item" onclick="switchPage('chat')" id="nav-chat">
+<span class="ni-icon">◎</span> AI Chat
+</div>
+<div class="nav-item" onclick="switchPage('sentinel')" id="nav-sentinel">
+<span class="ni-icon">⚠</span> Sentinel
+<span class="ni-badge">3</span>
+</div>
+<div class="nav-item" onclick="switchPage('rag')" id="nav-rag">
+<span class="ni-icon">◈</span> RAG Index
+</div>
+<div class="nav-item" onclick="switchPage('graph')" id="nav-graph">
+<span class="ni-icon">⊹</span> Knowledge Graph
+</div>
+<div class="nav-item" onclick="switchPage('settings')" id="nav-settings">
+<span class="ni-icon">⚙</span> Settings
+</div>
+</div>
+<div class="sidebar-section" style="flex:1">
+<div class="sidebar-label">WORKERS</div>
+<div class="worker-list">
+<div class="worker-row">
+<div class="w-dot run"></div>
+<div class="w-name">log_watcher</div>
+<div class="w-status run">RUN</div>
+</div>
+<div class="worker-row">
+<div class="w-dot idle"></div>
+<div class="w-name">build_worker</div>
+<div class="w-status">IDLE</div>
+</div>
+<div class="worker-row">
+<div class="w-dot run"></div>
+<div class="w-name">rag_indexer</div>
+<div class="w-status run">INDEX</div>
+</div>
+<div class="worker-row">
+<div class="w-dot run"></div>
+<div class="w-name">tg_handler</div>
+<div class="w-status run">LISTEN</div>
+</div>
+<div class="worker-row">
+<div class="w-dot run"></div>
+<div class="w-name">ai_orch</div>
+<div class="w-status run">INFER</div>
+</div>
+</div>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">MODEL</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);padding:4px;">mistral:7b-q4</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);padding:0 4px;">ollama:11434 · local</div>
+</div>
+</div>
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main-content">
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<div class="stats-row">
+<div class="stat-card">
+<div class="sc-label">FILES INDEXED</div>
+<div class="sc-value teal" id="indexed-val">14,827</div>
+<div class="sc-sub">Drive E: · complete</div>
+<div class="sc-bar"><div class="sc-fill" style="width:100%"></div></div>
+</div>
+<div class="stat-card">
+<div class="sc-label">CRASHES FIXED</div>
+<div class="sc-value" style="color:var(--teal)">7</div>
+<div class="sc-sub">last 24h · 2 pending</div>
+<div class="sc-bar"><div class="sc-fill" style="width:70%"></div></div>
+</div>
+<div class="stat-card">
+<div class="sc-label">BUILD STATUS</div>
+<div class="sc-value red">FAIL</div>
+<div class="sc-sub">axon_core · linker err</div>
+<div class="sc-bar"><div class="sc-fill red" style="width:28%"></div></div>
+</div>
+<div class="stat-card">
+<div class="sc-label">UPTIME</div>
+<div class="sc-value yellow" id="uptime-val">04:23</div>
+<div class="sc-sub">since last restart</div>
+<div class="sc-bar"><div class="sc-fill yellow" style="width:60%"></div></div>
+</div>
+</div>
+<div class="build-strip">
+<div class="bs-label">LAST BUILD</div>
+<div class="bs-name">axon_core v0.3.1</div>
+<div class="bs-info">cargo build --release · 2m 14s · 14:32:07</div>
+<button class="bs-btn teal" onclick="simulateBuild()">▶ REBUILD</button>
+<button class="bs-btn red">⊘ ABORT</button>
+</div>
+<div class="mid-row" style="flex:1;min-height:0;">
+<div class="panel">
+<div class="panel-head"><div class="ph-dot"></div>SYSTEM LOG</div>
+<div class="panel-body" id="log-panel">
+<div class="log-line"><span class="ll-time">14:30</span><span class="ll-src sys">SYS</span><span class="ll-text sys">AXON v0.3.1 initialized — 5 workers active</span></div>
+<div class="log-line"><span class="ll-time">14:30</span><span class="ll-src rag">RAG</span><span class="ll-text ok">Drive E: scan complete — 14,827 files indexed</span></div>
+<div class="log-line"><span class="ll-time">14:31</span><span class="ll-src sys">LOG</span><span class="ll-text warn">WARN: CPU spike detected (89%)</span></div>
+<div class="log-line"><span class="ll-time">14:31</span><span class="ll-src ai">AI </span><span class="ll-text">Analyzing → rayon thread pool contention</span></div>
+<div class="log-line"><span class="ll-time">14:32</span><span class="ll-src bld">BLD</span><span class="ll-text err">ERROR: linker error in axon_rag::embed</span></div>
+<div class="log-line"><span class="ll-time">14:32</span><span class="ll-src ai">AI </span><span class="ll-text">Reading 50 lines → sending to mistral:7b</span></div>
+<div class="log-line"><span class="ll-time">14:32</span><span class="ll-src ai">AI </span><span class="ll-text ok">Fix: missing `hnsw_rs` feature in Cargo.toml</span></div>
+<div class="log-line"><span class="ll-time">14:33</span><span class="ll-src tg">TG </span><span class="ll-text ok">Approved by user → applying patch...</span></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;">
+<div class="panel" style="flex:1">
+<div class="panel-head"><div class="ph-dot"></div>RAG OVERVIEW</div>
+<div class="panel-body">
+<div class="rag-row">
+<span class="rr-icon">🦀</span>
+<span class="rr-name">Rust Projects</span>
+<span class="rr-count">3,241 files</span>
+<div class="rr-bar"><div class="rr-fill" style="width:85%"></div></div>
+</div>
+<div class="rag-row">
+<span class="rr-icon">▲</span>
+<span class="rr-name">Next.js Projects</span>
+<span class="rr-count">8,102 files</span>
+<div class="rr-bar"><div class="rr-fill" style="width:100%"></div></div>
+</div>
+<div class="rag-row">
+<span class="rr-icon">📋</span>
+<span class="rr-name">Log Files</span>
+<span class="rr-count">1,847 files</span>
+<div class="rr-bar"><div class="rr-fill" style="width:45%;background:var(--yellow);box-shadow:0 0 5px var(--yellow)"></div></div>
+</div>
+<div class="rag-row">
+<span class="rr-icon">⚙</span>
+<span class="rr-name">Config Files</span>
+<span class="rr-count">1,637 files</span>
+<div class="rr-bar"><div class="rr-fill" style="width:40%;background:#a78bfa;box-shadow:0 0 5px #a78bfa"></div></div>
+</div>
+</div>
+</div>
+<div class="panel" style="flex:1">
+<div class="panel-head"><div class="ph-dot"></div>BUILD PHASES</div>
+<div class="panel-body">
+<div class="phase-grid">
+<div class="phase-row"><div class="pr-num">1</div><div class="pr-name">Skeleton</div><div class="pr-status prs-done">✓ DONE</div></div>
+<div class="phase-row"><div class="pr-num">2</div><div class="pr-name">Orchestrator</div><div class="pr-status prs-active">⟳ ACTIVE</div></div>
+<div class="phase-row"><div class="pr-num">3</div><div class="pr-name">RAG Local</div><div class="pr-status prs-active">⟳ ACTIVE</div></div>
+<div class="phase-row"><div class="pr-num">4</div><div class="pr-name">Sentinel</div><div class="pr-status prs-pending">○ PENDING</div></div>
+<div class="phase-row"><div class="pr-num">5</div><div class="pr-name">Persistent State</div><div class="pr-status prs-pending">○ PENDING</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- CHAT -->
+<div class="page" id="page-chat" style="padding:0;">
+<div class="chat-layout">
+<div class="chat-header">
+<div class="chat-avatar">◎</div>
+<div>
+<div class="chat-name">AXON AI</div>
+<div class="chat-sub">mistral:7b · context: drive-wide RAG · 14,827 files</div>
+</div>
+<select class="chat-model-select" id="model-select">
+<option>mistral:7b-q4 (default)</option>
+<option>codellama:13b</option>
+<option>deepseek-coder:6.7b</option>
+<option>llama3:8b</option>
+<option>claude-3 (API)</option>
+</select>
+</div>
+<div class="chat-messages" id="chat-messages">
+<div class="chat-msg ai">
+<div class="msg-avatar ai">⬡</div>
+<div>
+<div class="msg-bubble">
+<strong style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:11px;">AXON online.</strong><br><br>
+Sunt Dev OS-ul tău local. Am indexat <strong style="color:var(--teal)">14,827 fișiere</strong> de pe Drive E: — Rust, Next.js, loguri, config.<br><br>
+Pot compila, repara crash-uri, căuta în codebase, analiza loguri și trimite confirmări pe Telegram. Ce facem?
+</div>
+<div class="msg-time">14:30:02</div>
+<div class="chat-actions">
+<div class="action-chip" onclick="sendQuick('Analizează ultimul crash')">⚡ Analizează crash</div>
+<div class="action-chip" onclick="sendQuick('cargo build --release')">🔨 Rebuild</div>
+<div class="action-chip" onclick="sendQuick('Status workers')">◈ Status workers</div>
+<div class="action-chip" onclick="sendQuick('Caută în RAG: tokio async')">🔍 RAG search</div>
+</div>
+</div>
+</div>
+</div>
+<div class="chat-input-area">
+<div class="chat-input-box">
+<textarea id="chat-input" rows="1" placeholder="Întreabă AXON... (Enter = trimite, Shift+Enter = linie nouă)"></textarea>
+<button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+</div>
+</div>
+</div>
+</div>
+<!-- SENTINEL -->
+<div class="page" id="page-sentinel">
+<div class="sentinel-stats">
+<div class="stat-card">
+<div class="sc-label">ACTIVE ALERTS</div>
+<div class="sc-value red">3</div>
+<div class="sc-sub">2 critical</div>
+</div>
+<div class="stat-card">
+<div class="sc-label">FIXES APPLIED</div>
+<div class="sc-value teal">7</div>
+<div class="sc-sub">last 24h</div>
+</div>
+<div class="stat-card">
+<div class="sc-label">LOG LINES/s</div>
+<div class="sc-value" id="log-rate">142</div>
+<div class="sc-sub">watched files: 8</div>
+</div>
+<div class="stat-card">
+<div class="sc-label">PROCESSES</div>
+<div class="sc-value teal">12</div>
+<div class="sc-sub">monitored</div>
+</div>
+</div>
+<div class="alert-list">
+<div class="alert-card crit">
+<div class="ac-icon">🔴</div>
+<div class="ac-body">
+<div class="ac-title">Linker Error — axon_rag::embed</div>
+<div class="ac-msg">cargo build --release · axon_core v0.3.1 · 14:32:07</div>
+<div class="ac-log">error[E0432]: unresolved import `hnsw_rs`
+--> src/rag/embed.rs:3:5
+|
+3 | use hnsw_rs::prelude::*;
+| ^^^^^^^ no external crate `hnsw_rs`
+note: add `hnsw_rs = "0.3"` to Cargo.toml [features]</div>
+<div class="ac-actions">
+<button class="ac-btn teal" onclick="applyFix(this)">⚡ APPLY FIX</button>
+<button class="ac-btn ghost" onclick="switchPage('chat')">◎ Ask AI</button>
+<button class="ac-btn red">⊘ DISMISS</button>
+<div class="ac-meta">AI confidence: 94%</div>
+</div>
+</div>
+</div>
+<div class="alert-card warn">
+<div class="ac-icon">🟡</div>
+<div class="ac-body">
+<div class="ac-title">CPU Spike Detected</div>
+<div class="ac-msg">rayon thread pool · peak 89% · process: axon_rag_indexer</div>
+<div class="ac-log">14:31:02 WARN rayon::pool: thread contention detected
+14:31:02 INFO workers: 16 threads competing for 8 cores
+14:31:03 WARN cpu: 89% sustained for 12s
+14:31:04 AI: suggest reduce rayon::ThreadPoolBuilder num_threads to 4</div>
+<div class="ac-actions">
+<button class="ac-btn teal" onclick="applyFix(this)">⚡ APPLY FIX</button>
+<button class="ac-btn ghost">◎ Analyze</button>
+</div>
+</div>
+</div>
+<div class="alert-card info">
+<div class="ac-icon">🔵</div>
+<div class="ac-body">
+<div class="ac-title">RAG Indexing In Progress</div>
+<div class="ac-msg">embed batch 47/120 · ETA: ~3 min · model: nomic-embed-text</div>
+<div class="ac-actions">
+<button class="ac-btn ghost">⊘ Pause</button>
+</div>
+</div>
+</div>
+<div class="alert-card ok">
+<div class="ac-icon">🟢</div>
+<div class="ac-body">
+<div class="ac-title">Test Suite Passed</div>
+<div class="ac-msg">axon_core · 312/312 tests · 2.4s · confirmed via Telegram</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RAG -->
+<div class="page" id="page-rag">
+<div class="rag-stats">
+<div class="stat-card">
+<div class="sc-label">TOTAL INDEXED</div>
+<div class="sc-value teal" id="rag-total">14,827</div>
+<div class="sc-sub">Drive E: complete scan</div>
+</div>
+<div class="stat-card">
+<div class="sc-label">EMBEDDINGS</div>
+<div class="sc-value">47K</div>
+<div class="sc-sub">nomic-embed-text</div>
+</div>
+<div class="stat-card">
+<div class="sc-label">INDEX SIZE</div>
+<div class="sc-value yellow">284MB</div>
+<div class="sc-sub">HNSW vector store</div>
+</div>
+</div>
+<div class="rag-search">
+<span class="rag-search-icon">🔍</span>
+<input type="text" placeholder="Caută în codebase: ex. tokio::spawn, useEffect, error handling..." id="rag-search-input" oninput="ragSearch(this.value)"/>
+</div>
+<div class="rag-table">
+<div class="rt-head">
+<span>PATH</span>
+<span>TYPE</span>
+<span>FILES</span>
+<span>RELEVANCE</span>
+</div>
+<div class="rt-row">
+<div class="rt-name">🦀 /workspace/axon_core/src/</div>
+<div><span class="rt-lang rust">Rust</span></div>
+<div class="rt-count">1,204</div>
+<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:95%"></div></div></div>
+</div>
+<div class="rt-row">
+<div class="rt-name">▲ /workspace/axon-ui/src/</div>
+<div><span class="rt-lang next">Next.js</span></div>
+<div class="rt-count">3,841</div>
+<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:82%"></div></div></div>
+</div>
+<div class="rt-row">
+<div class="rt-name">🦀 /workspace/rag_engine/</div>
+<div><span class="rt-lang rust">Rust</span></div>
+<div class="rt-count">892</div>
+<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:74%"></div></div></div>
+</div>
+<div class="rt-row">
+<div class="rt-name">▲ /workspace/axon-dashboard/</div>
+<div><span class="rt-lang next">Next.js</span></div>
+<div class="rt-count">4,261</div>
+<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:100%"></div></div></div>
+</div>
+<div class="rt-row">
+<div class="rt-name">📋 E:/logs/axon/</div>
+<div><span class="rt-lang log">Logs</span></div>
+<div class="rt-count">1,847</div>
+<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:45%;background:var(--yellow)"></div></div></div>
+</div>
+<div class="rt-row">
+<div class="rt-name">⚙ E:/configs/</div>
+<div><span class="rt-lang cfg">Config</span></div>
+<div class="rt-count">1,637</div>
+<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:40%;background:#a78bfa"></div></div></div>
+</div>
+</div>
+<div id="rag-results" style="display:none;" class="panel">
+<div class="panel-head"><div class="ph-dot"></div>SEARCH RESULTS</div>
+<div class="panel-body" id="rag-results-body"></div>
+</div>
+</div>
+<!-- GRAPH -->
+<div class="page" id="page-graph" style="padding:16px;">
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:10px;">KNOWLEDGE GRAPH — AXON SYSTEM MAP</div>
+<div class="graph-container">
+<canvas id="kg-canvas"></canvas>
+<div class="kg-legend">
+<div class="kl-item"><div class="kl-dot" style="background:var(--teal)"></div>Core System</div>
+<div class="kl-item"><div class="kl-dot" style="background:#a78bfa"></div>RAG / Embedding</div>
+<div class="kl-item"><div class="kl-dot" style="background:var(--yellow)"></div>Build / Test</div>
+<div class="kl-item"><div class="kl-dot" style="background:var(--red)"></div>Errors / Alerts</div>
+<div class="kl-item"><div class="kl-dot" style="background:#38bdf8"></div>AI Inference</div>
+</div>
+</div>
+</div>
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+<div style="font-family:'Orbitron',monospace;font-size:13px;color:var(--teal);letter-spacing:2px;margin-bottom:4px;">AXON SETTINGS</div>
+<div class="settings-grid">
+<div class="settings-section">
+<div class="ss-head">AI MODEL</div>
+<div class="ss-body">
+<div>
+<div class="sr-label" style="margin-bottom:6px;">Ollama Endpoint</div>
+<input class="settings-input" value="http://localhost:11434"/>
+</div>
+<div>
+<div class="sr-label" style="margin-bottom:6px;">Default Model</div>
+<select class="settings-select" style="width:100%">
+<option>mistral:7b-q4</option>
+<option>codellama:13b</option>
+<option>deepseek-coder:6.7b</option>
+<option>llama3:8b</option>
+</select>
+</div>
+<div class="setting-row">
+<div><div class="sr-label">Auto Model Routing</div><div class="sr-sub">code → codellama, chat → mistral</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+</div>
+</div>
+<div class="settings-section">
+<div class="ss-head">SENTINEL</div>
+<div class="ss-body">
+<div class="setting-row">
+<div><div class="sr-label">Log Watcher</div><div class="sr-sub">Monitor .log files</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+<div class="setting-row">
+<div><div class="sr-label">Auto Fix Loop</div><div class="sr-sub">Propose + apply fixes</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+<div class="setting-row">
+<div><div class="sr-label">Require Approval</div><div class="sr-sub">Ask via Telegram before fix</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+<div class="setting-row">
+<div><div class="sr-label">Process Watcher</div><div class="sr-sub">Monitor running processes</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+</div>
+</div>
+<div class="settings-section">
+<div class="ss-head">TELEGRAM</div>
+<div class="ss-body">
+<div>
+<div class="sr-label" style="margin-bottom:6px;">Bot Token</div>
+<input class="settings-input" type="password" value="7412389012:AAH_placeholder_token"/>
+</div>
+<div>
+<div class="sr-label" style="margin-bottom:6px;">Chat ID</div>
+<input class="settings-input" value="123456789"/>
+</div>
+<div class="setting-row">
+<div><div class="sr-label">Alert Notifications</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+<div class="setting-row">
+<div><div class="sr-label">Build Reports</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+</div>
+</div>
+<div class="settings-section">
+<div class="ss-head">RAG ENGINE</div>
+<div class="ss-body">
+<div>
+<div class="sr-label" style="margin-bottom:6px;">Scan Root</div>
+<input class="settings-input" value="E:/"/>
+</div>
+<div>
+<div class="sr-label" style="margin-bottom:6px;">Embed Model</div>
+<select class="settings-select" style="width:100%">
+<option>nomic-embed-text</option>
+<option>mxbai-embed-large</option>
+<option>all-minilm</option>
+</select>
+</div>
+<div class="setting-row">
+<div><div class="sr-label">Auto Re-index</div><div class="sr-sub">Watch for file changes</div></div>
+<div class="toggle on" onclick="this.classList.toggle('on')"></div>
+</div>
+<div>
+<div class="sr-label" style="margin-bottom:6px;">Exclude Patterns</div>
+<input class="settings-input" value="node_modules/, target/, .git/"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><!-- end main-content -->
+<!-- ═══ RIGHT PANEL ═══ -->
+<div class="right-panel">
+<div class="rp-section">
+<div class="rp-label">SENTINEL ALERTS</div>
+<div class="alert-mini crit">
+<div class="am-icon">🔴</div>
+<div class="am-body">
+<div class="am-title">Linker Error</div>
+<div class="am-sub">axon_rag::embed · hnsw_rs</div>
+</div>
+<div class="am-action t" onclick="switchPage('sentinel')">FIX</div>
+</div>
+<div class="alert-mini warn">
+<div class="am-icon">🟡</div>
+<div class="am-body">
+<div class="am-title">CPU Spike 89%</div>
+<div class="am-sub">rayon pool contention</div>
+</div>
+<div class="am-action t" onclick="switchPage('sentinel')">VIEW</div>
+</div>
+<div class="alert-mini info">
+<div class="am-icon">🔵</div>
+<div class="am-body">
+<div class="am-title">RAG Indexing</div>
+<div class="am-sub">batch 47/120 · 3min ETA</div>
+</div>
+</div>
+<div class="alert-mini ok">
+<div class="am-icon">🟢</div>
+<div class="am-body">
+<div class="am-title">Tests Passed</div>
+<div class="am-sub">312/312 · 2.4s</div>
+</div>
+</div>
+</div>
+<div class="rp-section">
+<div class="rp-label">SYSTEM</div>
+<div class="sys-metrics">
+<div class="sm-box">
+<div class="sm-label">CPU</div>
+<div class="sm-val" id="cpu-r">34%</div>
+<div class="sm-bar"><div class="sm-fill" id="cpu-rbar" style="width:34%"></div></div>
+</div>
+<div class="sm-box">
+<div class="sm-label">VRAM</div>
+<div class="sm-val">5.2G</div>
+<div class="sm-bar"><div class="sm-fill" style="width:65%;background:#a78bfa;box-shadow:0 0 4px #a78bfa"></div></div>
+</div>
+<div class="sm-box">
+<div class="sm-label">RAM</div>
+<div class="sm-val">11G</div>
+<div class="sm-bar"><div class="sm-fill" style="width:71%"></div></div>
+</div>
+<div class="sm-box">
+<div class="sm-label">DISK E:</div>
+<div class="sm-val">847G</div>
+<div class="sm-bar"><div class="sm-fill" style="width:55%"></div></div>
+</div>
+</div>
+</div>
+<div class="rp-section" style="flex:1">
+<div class="rp-label">TELEGRAM FEED</div>
+<div id="tg-feed">
+<div class="tg-msg">
+<div class="tg-icon">📱</div>
+<div class="tg-body">
+<div class="tg-text">Fix approved by user</div>
+<div class="tg-meta">14:33:07 · @you</div>
+</div>
+</div>
+<div class="tg-msg">
+<div class="tg-icon">🤖</div>
+<div class="tg-body">
+<div class="tg-text">⚠ Linker error detected. Fix ready. Approve?</div>
+<div class="tg-meta">14:32:12 · AXON</div>
+</div>
+</div>
+<div class="tg-msg">
+<div class="tg-icon">🤖</div>
+<div class="tg-body">
+<div class="tg-text">✅ Build started — axon_core v0.3.1</div>
+<div class="tg-meta">14:30:45 · AXON</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rp-section">
+<div class="rp-label">SESSION</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);line-height:1.8;">
+<div>state: <span style="color:var(--teal)">axon_state.json</span></div>
+<div>session: <span style="color:var(--text2)" id="sess-id">ax_4f2c9b</span></div>
+<div>uptime: <span style="color:var(--text2)" id="uptime-r">04:23:11</span></div>
+<div>workers: <span style="color:var(--teal)">5/5 active</span></div>
+</div>
+</div>
+</div>
+<!-- ═══ STATUS BAR ═══ -->
+<div class="statusbar">
+<div class="sb-item"><div class="sb-dot teal"></div>Ollama:11434</div>
+<div class="sb-item"><div class="sb-dot teal"></div>Telegram:OK</div>
+<div class="sb-item"><div class="sb-dot red"></div>Build:FAIL</div>
+<div class="sb-item"><div class="sb-dot teal"></div>RAG:indexing</div>
+<div class="sb-right">
+<span>AXON v0.3.1-dev</span>
+<span id="clock-sb">14:33:07</span>
+</div>
+</div>
+</div><!-- end app -->
+<script>
+// ═══ PAGE SWITCHING ═══
+const pages = ['dashboard','chat','sentinel','rag','graph','settings'];
+const titles = {dashboard:'DASHBOARD',chat:'AI CHAT',sentinel:'SENTINEL',rag:'RAG INDEX',graph:'KNOWLEDGE GRAPH',settings:'SETTINGS'};
+function switchPage(page) {
+pages.forEach(p => {
+document.getElementById('page-'+p).classList.remove('active');
+document.getElementById('nav-'+p)?.classList.remove('active');
+document.getElementById('ib-'+p)?.classList.remove('active');
+});
+document.getElementById('page-'+page).classList.add('active');
+document.getElementById('nav-'+page)?.classList.add('active');
+document.getElementById('ib-'+page)?.classList.add('active');
+document.getElementById('page-title').textContent = titles[page];
+if(page === 'graph') setTimeout(initGraph, 50);
+}
+// ═══ CLOCK ═══
+function updateClock() {
+const n = new Date();
+const t = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
+document.getElementById('clock-sb').textContent = t;
+}
+setInterval(updateClock, 1000);
+// ═══ UPTIME ═══
+let uptimeSec = 4*3600+23*60+11;
+setInterval(()=>{
+uptimeSec++;
+const h=Math.floor(uptimeSec/3600),m=Math.floor((uptimeSec%3600)/60),s=uptimeSec%60;
+const t=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+document.getElementById('uptime-r').textContent=t;
+const short=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+document.getElementById('uptime-val').textContent=short;
+},1000);
+// ═══ CPU LIVE ═══
+let cpu=34;
+setInterval(()=>{
+cpu=Math.max(8,Math.min(92,cpu+(Math.random()-0.45)*9));
+const v=Math.round(cpu);
+const c=v>70?'var(--red)':v>50?'var(--yellow)':'var(--teal)';
+document.getElementById('cpu-top').textContent=v+'%';
+document.getElementById('cpu-r').textContent=v+'%';
+const bar=document.getElementById('cpu-rbar');
+bar.style.width=v+'%';
+bar.style.background=c;
+bar.style.boxShadow=`0 0 4px ${c}`;
+},2000);
+// ═══ LOG RATE LIVE ═══
+setInterval(()=>{
+const r=document.getElementById('log-rate');
+if(r) r.textContent=Math.floor(120+Math.random()*60);
+},3000);
+// ═══ BUILD SIMULATE ═══
+function simulateBuild() {
+const panel=document.getElementById('log-panel');
+const t=new Date();
+const ts=`${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
+const addLine=(src,cls,txt)=>{
+const d=document.createElement('div');d.className='log-line';
+d.innerHTML=`<span class="ll-time">${ts}</span><span class="ll-src ${cls}">${src}</span><span class="ll-text ${cls}">${txt}</span>`;
+panel.appendChild(d);panel.scrollTop=panel.scrollHeight;
+};
+addLine('BLD','bld','Starting cargo build --release...');
+setTimeout(()=>addLine('BLD','bld','Compiling axon_core v0.3.1'),500);
+setTimeout(()=>addLine('BLD','bld','Compiling axon_rag v0.2.0'),1200);
+setTimeout(()=>addLine('BLD','ok','Build complete → axon_core [optimized]'),2500);
+}
+// ═══ APPLY FIX ═══
+function applyFix(btn) {
+btn.textContent='Applying...';btn.disabled=true;
+setTimeout(()=>{
+btn.textContent='✓ APPLIED';
+btn.style.color='var(--teal)';
+btn.style.borderColor='rgba(0,229,200,0.4)';
+const feed=document.getElementById('tg-feed');
+const d=document.createElement('div');d.className='tg-msg';
+d.innerHTML=`<div class="tg-icon">🤖</div><div class="tg-body"><div class="tg-text">✅ Fix applied successfully. Running tests...</div><div class="tg-meta">just now · AXON</div></div>`;
+feed.insertBefore(d,feed.firstChild);
+},1500);
+}
+// ═══ CHAT ═══
+const chatInput=document.getElementById('chat-input');
+chatInput.addEventListener('keydown',e=>{
+if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+});
+chatInput.addEventListener('input',function(){
+this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';
+});
+function sendQuick(txt){chatInput.value=txt;sendMessage();}
+
+// ═══ sendMessage — WS VERSION (non-async, fire-and-forget) ═══
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const btn = document.getElementById('send-btn');
+
+  addMsg('user', msg);
+  input.value = '';
+  input.style.height = 'auto';
+  btn.disabled = true;
+
+  const typing = addTyping();
+
+  const sent = sendToAxon({
+    type: "Chat",
+    payload: { message: msg }
+  });
+
+  if (!sent) {
+    typing.remove();
+    addMsg('ai', '⚠ WebSocket not connected (ws://127.0.0.1:7878/ws)');
+    btn.disabled = false;
+    return;
+  }
+
+  // răspunsul vine pe WS → ChatResponse scoate typing
+  setTimeout(() => { btn.disabled = false; }, 500);
+}
+
+let chatHistory=[];
+function getChatHistory(newMsg){
+chatHistory.push({role:'user',content:newMsg});
+if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
+return chatHistory;
+}
+function addMsg(role,text){
+const container=document.getElementById('chat-messages');
+const now=new Date();
+const ts=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+const div=document.createElement('div');
+div.className=`chat-msg ${role}`;
+// Convert markdown-ish to html
+let html=text
+.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,lang,code)=>`<div class="msg-code">${code.trim()}</div>`)
+.replace(/`([^`]+)`/g,'<code style="background:var(--bg2);padding:1px 5px;border-radius:3px;font-family:JetBrains Mono,monospace;font-size:11px;color:#a78bfa">$1</code>')
+.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+.replace(/\n/g,'<br>');
+const avatar=role==='ai'?'<div class="msg-avatar ai">⬡</div>':'<div class="msg-avatar user-av">▶</div>';
+div.innerHTML=`${avatar}<div><div class="msg-bubble">${html}</div><div class="msg-time">${ts}</div></div>`;
+container.appendChild(div);
+container.scrollTop=container.scrollHeight;
+if(role==='ai'){chatHistory.push({role:'assistant',content:text});}
+return div;
+}
+function addTyping(){
+const container=document.getElementById('chat-messages');
+const div=document.createElement('div');div.className='chat-msg ai';
+div.innerHTML=`<div class="msg-avatar ai">⬡</div><div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div></div>`;
+container.appendChild(div);container.scrollTop=container.scrollHeight;
+return div;
+}
+// ═══ RAG SEARCH ═══
+function ragSearch(q){
+const res=document.getElementById('rag-results');
+const body=document.getElementById('rag-results-body');
+if(!q){res.style.display='none';return;}
+res.style.display='flex';
+body.innerHTML=`
+<div class="log-line"><span class="ll-src rag">RAG</span><span class="ll-text ok">Found 3 relevant chunks for "${q}"</span></div>
+<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:4px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);line-height:1.7;">
+<div style="color:var(--teal);margin-bottom:4px;">📄 src/rag/embed.rs:42</div>
+<div>// TODO: integrate ${q} with hnsw_rs vector store</div>
+</div>
+<div style="margin-top:6px;padding:8px;background:var(--bg3);border-radius:4px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);line-height:1.7;">
+<div style="color:#a78bfa;margin-bottom:4px;">📄 src/workers/rag_indexer.rs:118</div>
+<div>pub async fn index_chunk(chunk: &str) → Result&lt;Vec&lt;f32&gt;&gt;</div>
+</div>
+`;
+}
+// ═══ KNOWLEDGE GRAPH ═══
+function initGraph(){
+const canvas=document.getElementById('kg-canvas');if(!canvas)return;
+const ctx=canvas.getContext('2d');
+canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
+const W=canvas.width,H=canvas.height;
+const nodes=[
+{id:0,x:W/2,y:H/2,r:22,color:'#00e5c8',label:'AXON',glow:'rgba(0,229,200,0.4)',vx:0,vy:0},
+{id:1,x:W/2-160,y:H/2-80,r:14,color:'#a78bfa',label:'RAG Engine',glow:'rgba(167,139,250,0.3)',vx:0.3,vy:0.1},
+{id:2,x:W/2+160,y:H/2-80,r:14,color:'#ffc107',label:'Build Worker',glow:'rgba(255,193,7,0.3)',vx:-0.2,vy:0.2},
+{id:3,x:W/2-160,y:H/2+80,r:14,color:'#ff3d5a',label:'Sentinel',glow:'rgba(255,61,90,0.3)',vx:0.2,vy:-0.3},
+{id:4,x:W/2+160,y:H/2+80,r:14,color:'#38bdf8',label:'AI Orch',glow:'rgba(56,189,248,0.3)',vx:-0.3,vy:-0.1},
+{id:5,x:W/2,y:H/2-150,r:10,color:'#34d399',label:'Telegram',glow:'rgba(52,211,153,0.3)',vx:0.1,vy:0.3},
+{id:6,x:W/2-240,y:H/2,r:10,color:'#a78bfa',label:'Embeddings',glow:'rgba(167,139,250,0.2)',vx:0.2,vy:-0.1},
+{id:7,x:W/2+240,y:H/2,r:10,color:'#ffc107',label:'Cargo',glow:'rgba(255,193,7,0.2)',vx:-0.1,vy:0.2},
+{id:8,x:W/2,y:H/2+150,r:10,color:'#00e5c8',label:'State JSON',glow:'rgba(0,229,200,0.2)',vx:0.15,vy:-0.2},
+{id:9,x:W/2-80,y:H/2-160,r:8,color:'#ff3d5a',label:'Log Watch',glow:'rgba(255,61,90,0.2)',vx:0.25,vy:0.15},
+];
+const edges=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[2,7],[0,8],[3,9],[1,4],[4,5],[3,2]];
+let frame=0;
+function draw(){
+ctx.clearRect(0,0,W,H);
+// BG grid
+ctx.strokeStyle='rgba(26,42,56,0.4)';ctx.lineWidth=1;
+for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+// Animate nodes
+nodes.forEach((n,i)=>{
+if(i===0)return;
+n.x+=n.vx;n.y+=n.vy;
+if(n.x<n.r||n.x>W-n.r)n.vx*=-1;
+if(n.y<n.r||n.y>H-n.r)n.vy*=-1;
+});
+// Edges
+edges.forEach(([a,b])=>{
+const na=nodes[a],nb=nodes[b];
+const pulse=(Math.sin(frame*0.03+a*0.5)+1)/2;
+ctx.strokeStyle=`rgba(0,229,200,${0.06+pulse*0.12})`;
+ctx.lineWidth=1+pulse*0.5;
+ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.stroke();
+// Packet animation
+const t=(frame*0.008+a*0.3)%1;
+const px=na.x+(nb.x-na.x)*t,py=na.y+(nb.y-na.y)*t;
+ctx.fillStyle='rgba(0,229,200,0.8)';
+ctx.beginPath();ctx.arc(px,py,2,0,Math.PI*2);ctx.fill();
+});
+// Nodes
+nodes.forEach(n=>{
+const pulse=(Math.sin(frame*0.05+n.id*0.7)+1)/2;
+// Glow
+const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.5);
+g.addColorStop(0,n.glow.replace(/[\d.]+\)$/,(0.15+pulse*0.15).toFixed(2)+')'));
+g.addColorStop(1,'transparent');
+ctx.fillStyle=g;
+ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2);ctx.fill();
+// Ring
+ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
+ctx.globalAlpha=0.3+pulse*0.4;
+ctx.beginPath();ctx.arc(n.x,n.y,n.r+4+pulse*3,0,Math.PI*2);ctx.stroke();
+ctx.globalAlpha=1;
+// Circle
+ctx.fillStyle=n.id===0?'rgba(0,229,200,0.15)':'rgba(10,16,24,0.8)';
+ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
+ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();ctx.stroke();
+// Label
+ctx.fillStyle=n.color;
+ctx.font=`${n.id===0?'700 11':'600 9'}px JetBrains Mono`;
+ctx.textAlign='center';
+ctx.fillText(n.label,n.x,n.y+(n.id===0?4:3));
+// Sub label
+if(n.id!==0){
+ctx.fillStyle='rgba(140,168,188,0.7)';
+ctx.font='8px DM Sans';
+ctx.fillText(n.label,n.x,n.y+n.r+12);
+}
+});
+frame++;
+requestAnimationFrame(draw);
+}
+draw();
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- AXON_WS_BRIDGE — CORRECTED (port 7878 + proper WS handling) -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+// ═══ CONFIG ═══
+const AXON_WS_URL = "ws://127.0.0.1:7878/ws";  // ← PORT CORECT
+let axonSocket = null;
+
+// ═══ CONNECT ═══
+function connectAxon() {
+  if (axonSocket && axonSocket.readyState === WebSocket.OPEN) return;
+  console.log("🔌 Connecting:", AXON_WS_URL);
+  axonSocket = new WebSocket(AXON_WS_URL);
+
+  axonSocket.onopen = () => {
+    console.log("✅ AXON WS Connected");
+  };
+
+  axonSocket.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      handleAxonEvent(data);
+    } catch(e) {
+      console.error("WS parse:", e);
+    }
+  };
+
+  axonSocket.onclose = () => {
+    console.warn("⚠ WS closed. Reconnecting...");
+    setTimeout(connectAxon, 3000);
+  };
+}
+
+// ═══ SEND (fire-and-forget) ═══
+function sendToAxon(payload) {
+  if (axonSocket?.readyState === WebSocket.OPEN) {
+    axonSocket.send(JSON.stringify(payload));
+    return true;
+  }
+  return false;
+}
+
+// ═══ HANDLE EVENTS ═══
+function handleAxonEvent(event) {
+  if (!event?.type) return;
+  switch(event.type) {
+    case "ChatResponse":
+      // ✅ Scoate streaming + typing înainte de a afișa răspunsul
+      document.querySelector(".chat-msg.ai.streaming")?.remove();
+      const typing = document.querySelector(".typing-indicator");
+      if (typing) typing.closest(".chat-msg")?.remove();
+      addMsg("ai", event.payload.text);
+      break;
+    case "ChatToken":
+      // ✅ Rust trimite { token }, NU { text }
+      appendStreamingToken(event.payload.token);
+      break;
+    case "LogLine":
+    case "BuildFinished":
+      console.log(event.type, event.payload);
+      break;
+  }
+}
+
+// ═══ STREAMING ═══
+function appendStreamingToken(token) {
+  const container = document.getElementById("chat-messages");
+  if (!container) return;
+  let last = container.querySelector(".chat-msg.ai.streaming");
+  if (!last) {
+    last = document.createElement("div");
+    last.className = "chat-msg ai streaming";
+    last.innerHTML = '<div class="msg-avatar ai">⬡</div><div><div class="msg-bubble"></div></div>';
+    container.appendChild(last);
+  }
+  last.querySelector(".msg-bubble").innerHTML += token;
+  container.scrollTop = container.scrollHeight;
+}
+
+// ═══ INIT ═══
+document.addEventListener("DOMContentLoaded", connectAxon);
+</script>
+</body>
+</html>

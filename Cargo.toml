@@ -1,0 +1,39 @@
+[package]
+name = "axon"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+# Async runtime
+tokio = { version = "1.37", features = ["full"] }
+
+# Web framework (WebSocket support)
+axum = { version = "0.7", features = ["ws"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Config parsing
+toml = "0.8"
+
+# HTTP client (Ollama calls)
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+
+# Utilities
+anyhow = "1.0"
+tracing = "0.1"
+uuid = { version = "1.7", features = ["v4", "serde"] }
+futures = "0.3"
+
+# Optional (safe to keep)
+once_cell = "1.19"
+
+chrono = { version = "0.4", features = ["serde"] }
+
+notify = "6"
+
+async-trait = "0.1"
+
+hostname = "0.3"

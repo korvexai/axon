@@ -1,0 +1,14 @@
+﻿CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
+    session_id TEXT NOT NULL,
+    role TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS conversations (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT,
+    summary TEXT,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

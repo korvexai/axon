@@ -1,0 +1,7 @@
+﻿/target
+/logs
+.axon_doctor_memory.json
+config.toml
+*.bak
+*.pdb
+/backup*
