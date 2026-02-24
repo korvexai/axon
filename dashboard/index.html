@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AXON â€” Dev OS</title>
+<title>AXON ->€” Dev OS</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,400;0,700;1,400&family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap');
 :root {
@@ -34,21 +34,18 @@ height: 100vh;
 overflow: hidden;
 cursor: default;
 }
-/* SCANLINES */
 body::after {
 content:'';
 position:fixed;inset:0;
 background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,229,200,0.012) 3px,rgba(0,229,200,0.012) 4px);
 pointer-events:none;z-index:9999;
 }
-/* LAYOUT */
 .app {
 display: grid;
 grid-template-columns: 64px 200px 1fr 300px;
 grid-template-rows: 52px 1fr 32px;
 height: 100vh;
 }
-/* â•â•â• ICON BAR â•â•â• */
 .iconbar {
 grid-row: 1 / -1;
 background: var(--bg2);
@@ -77,12 +74,12 @@ width: 40px; height: 40px;
 border-radius: 8px;
 display: flex;align-items:center;justify-content:center;
 cursor: pointer;
-font-size: 16px;
 color: var(--dim);
 transition: all 0.15s;
 border: 1px solid transparent;
 position: relative;
 }
+.icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
 .icon-btn:hover { background: var(--teal-dim); color: var(--teal); border-color: rgba(0,229,200,0.15); }
 .icon-btn.active { background: var(--teal-dim); color: var(--teal); border-color: rgba(0,229,200,0.3); box-shadow: 0 0 12px rgba(0,229,200,0.1); }
 .icon-btn .ibadge {
@@ -102,7 +99,6 @@ opacity:0;pointer-events:none;transition:opacity 0.15s;
 z-index:100;
 }
 .icon-btn:hover .icon-btn-tooltip { opacity:1; }
-/* â•â•â• SIDEBAR â•â•â• */
 .sidebar {
 background: var(--bg2);
 border-right: 1px solid var(--border2);
@@ -130,6 +126,7 @@ cursor:pointer;font-size:13px;color:var(--text);
 transition:all 0.12s;border:1px solid transparent;
 position:relative;
 }
+.nav-item svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
 .nav-item:hover { background:var(--teal-dim);color:var(--text2); }
 .nav-item.active {
 background:var(--teal-dim);color:var(--teal);
@@ -140,7 +137,6 @@ content:'';position:absolute;left:0;top:20%;bottom:20%;
 width:2px;background:var(--teal);border-radius:0 2px 2px 0;
 box-shadow:0 0 8px var(--teal);
 }
-.ni-icon { font-size:13px;width:16px;text-align:center;flex-shrink:0; }
 .ni-badge {
 margin-left:auto;background:var(--red);color:#fff;
 font-family:'JetBrains Mono',monospace;font-size:9px;
@@ -148,7 +144,6 @@ padding:1px 5px;border-radius:3px;
 box-shadow:0 0 6px rgba(255,61,90,0.4);
 }
 .ni-badge.teal { background:var(--teal);color:#000;box-shadow:0 0 6px var(--teal-glow); }
-/* Worker list */
 .worker-list { padding:0 4px; }
 .worker-row {
 display:flex;align-items:center;gap:8px;
@@ -164,7 +159,6 @@ font-family:'JetBrains Mono',monospace;font-size:10px;
 .w-status.run { color:var(--teal); }
 .w-status.err { color:var(--red); }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
-/* â•â•â• TOPBAR â•â•â• */
 .topbar {
 grid-column: 2 / -1;
 background: var(--bg2);
@@ -195,16 +189,13 @@ letter-spacing:1px;
 }
 .status-pill.online { background:rgba(0,229,200,0.08);border:1px solid rgba(0,229,200,0.25);color:var(--teal); }
 .status-pill.warn { background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.25);color:var(--yellow); }
-/* â•â•â• MAIN CONTENT â•â•â• */
 .main-content {
 overflow:hidden;
 position:relative;
 background: var(--bg);
 }
-/* Pages */
 .page { display:none;height:100%;overflow-y:auto;padding:20px; }
 .page.active { display:flex;flex-direction:column;gap:16px; }
-/* â•â•â• DASHBOARD PAGE â•â•â• */
 .stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:12px; }
 .stat-card {
 background:var(--bg2);border:1px solid var(--border);
@@ -231,7 +222,6 @@ color:var(--bright);line-height:1;margin-bottom:4px;
 .sc-fill { height:100%;background:var(--teal);box-shadow:0 0 6px var(--teal);border-radius:1px; }
 .sc-fill.red { background:var(--red);box-shadow:0 0 6px var(--red); }
 .sc-fill.yellow { background:var(--yellow); }
-/* Mid row */
 .mid-row { display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-height:0; }
 .panel {
 background:var(--bg2);border:1px solid var(--border);
@@ -245,7 +235,6 @@ letter-spacing:2px;color:var(--dim);
 }
 .panel-head .ph-dot { width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal); }
 .panel-body { flex:1;overflow-y:auto;padding:10px 14px; }
-/* Log lines */
 .log-line {
 display:flex;gap:10px;padding:2px 0;
 font-family:'JetBrains Mono',monospace;font-size:11px;
@@ -265,19 +254,18 @@ line-height:1.6;
 .ll-text.warn{ color:var(--yellow); }
 .ll-text.sys { color:var(--teal); }
 .ll-text.dim { color:var(--dim); }
-/* RAG table */
 .rag-row {
 display:flex;align-items:center;gap:10px;
 padding:7px 0;border-bottom:1px solid var(--border2);
 font-size:12px;
 }
 .rag-row:last-child { border-bottom:none; }
-.rr-icon { font-size:14px;width:18px;flex-shrink:0; }
+.rr-icon { font-size:14px;width:18px;flex-shrink:0; display:flex; }
+.rr-icon svg { width: 16px; height: 16px; fill: currentColor; }
 .rr-name { font-family:'JetBrains Mono',monospace;color:var(--text2);flex:1;font-size:11px; }
 .rr-count { font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);min-width:70px;text-align:right; }
 .rr-bar { width:72px;height:2px;background:var(--border);border-radius:1px;overflow:hidden;flex-shrink:0; }
 .rr-fill { height:100%;background:var(--teal);box-shadow:0 0 5px var(--teal); }
-/* Build bar */
 .build-strip {
 background:var(--bg2);border:1px solid var(--border);
 border-radius:8px;padding:12px 16px;
@@ -292,11 +280,12 @@ padding:6px 16px;border-radius:5px;
 font-family:'JetBrains Mono',monospace;font-size:10px;
 letter-spacing:1px;cursor:pointer;border:1px solid;
 transition:all 0.15s;
+display: flex; align-items: center; gap: 6px;
 }
+.bs-btn svg { width: 12px; height: 12px; fill: currentColor; }
 .bs-btn.teal { background:rgba(0,229,200,0.08);border-color:rgba(0,229,200,0.3);color:var(--teal); }
 .bs-btn.teal:hover { background:rgba(0,229,200,0.16); }
 .bs-btn.red { background:rgba(255,61,90,0.08);border-color:rgba(255,61,90,0.3);color:var(--red); }
-/* Phase tracker */
 .phase-grid { display:flex;flex-direction:column;gap:4px;padding:2px 0; }
 .phase-row {
 display:flex;align-items:center;gap:8px;
@@ -309,7 +298,6 @@ background:var(--bg3);
 .prs-done { color:var(--teal); }
 .prs-active { color:var(--yellow); }
 .prs-pending { color:var(--dim); }
-/* â•â•â• CHATBOT PAGE â•â•â• */
 .chat-layout { display:flex;flex-direction:column;height:100%;padding:0; }
 .chat-header {
 padding:14px 20px;border-bottom:1px solid var(--border2);
@@ -319,8 +307,9 @@ display:flex;align-items:center;gap:10px;flex-shrink:0;
 width:32px;height:32px;border-radius:8px;
 background:var(--teal-dim);border:1px solid rgba(0,229,200,0.3);
 display:flex;align-items:center;justify-content:center;
-font-size:14px;color:var(--teal);
+color:var(--teal);
 }
+.chat-avatar svg { width: 18px; height: 18px; fill: currentColor; }
 .chat-name { font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2); }
 .chat-sub { font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim); }
 .chat-model-select {
@@ -342,6 +331,7 @@ width:28px;height:28px;border-radius:6px;flex-shrink:0;
 display:flex;align-items:center;justify-content:center;font-size:12px;
 border:1px solid var(--border);
 }
+.msg-avatar svg { width: 16px; height: 16px; fill: currentColor; }
 .msg-avatar.ai { background:var(--teal-dim);border-color:rgba(0,229,200,0.2);color:var(--teal); }
 .msg-avatar.user-av { background:var(--bg3);color:var(--text2); }
 .msg-bubble {
@@ -371,7 +361,9 @@ padding:4px 10px;border-radius:20px;
 border:1px solid var(--border);background:var(--bg3);
 font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text);
 cursor:pointer;transition:all 0.12s;
+display: flex; align-items: center; gap: 6px;
 }
+.action-chip svg { width: 12px; height: 12px; fill: currentColor; }
 .action-chip:hover { border-color:rgba(0,229,200,0.3);color:var(--teal);background:var(--teal-dim); }
 .chat-input-area {
 padding:14px 20px;border-top:1px solid var(--border2);flex-shrink:0;
@@ -396,6 +388,7 @@ display:flex;align-items:center;justify-content:center;
 color:#000;font-size:15px;flex-shrink:0;
 transition:all 0.15s;box-shadow:0 0 12px rgba(0,229,200,0.2);
 }
+.send-btn svg { width: 16px; height: 16px; fill: currentColor; }
 .send-btn:hover { transform:scale(1.05);box-shadow:0 0 20px rgba(0,229,200,0.35); }
 .send-btn:disabled { background:var(--dim);cursor:not-allowed;box-shadow:none;transform:none; }
 .typing-indicator { display:flex;gap:4px;align-items:center;padding:4px 0; }
@@ -404,7 +397,6 @@ transition:all 0.15s;box-shadow:0 0 12px rgba(0,229,200,0.2);
 .typing-dot:nth-child(2){animation:td 1.2s 0.2s infinite}
 .typing-dot:nth-child(3){animation:td 1.2s 0.4s infinite}
 @keyframes td{0%,80%,100%{transform:scale(1);opacity:0.4}40%{transform:scale(1.3);opacity:1}}
-/* â•â•â• SENTINEL PAGE â•â•â• */
 .alert-list { display:flex;flex-direction:column;gap:10px; }
 .alert-card {
 background:var(--bg2);border-radius:8px;border:1px solid;
@@ -424,7 +416,8 @@ content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
 .alert-card.warn::before { background:var(--yellow); }
 .alert-card.info::before { background:var(--teal); }
 .alert-card.ok::before   { background:var(--teal);opacity:0.4; }
-.ac-icon { font-size:18px;flex-shrink:0;margin-top:1px; }
+.ac-icon { font-size:18px;flex-shrink:0;margin-top:1px; display:flex; }
+.ac-icon svg { width: 18px; height: 18px; fill: currentColor; }
 .ac-body { flex:1; }
 .ac-title { font-weight:500;color:var(--bright);font-size:13px;margin-bottom:3px; }
 .ac-msg { font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:8px; }
@@ -445,9 +438,7 @@ cursor:pointer;border:1px solid;transition:all 0.15s;
 .ac-btn.ghost:hover { border-color:var(--text);color:var(--text); }
 .ac-btn.red { background:rgba(255,61,90,0.08);border-color:rgba(255,61,90,0.3);color:var(--red); }
 .ac-meta { font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);margin-left:auto;margin-top:2px; }
-/* Sentinel header */
 .sentinel-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px; }
-/* â•â•â• RAG PAGE â•â•â• */
 .rag-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:12px; }
 .rag-search {
 display:flex;align-items:center;gap:10px;
@@ -455,7 +446,8 @@ background:var(--bg2);border:1px solid var(--border);border-radius:8px;
 padding:10px 14px;transition:border-color 0.2s;
 }
 .rag-search:focus-within { border-color:rgba(0,229,200,0.3); }
-.rag-search-icon { color:var(--dim);font-size:14px; }
+.rag-search-icon { color:var(--dim);font-size:14px; display:flex; }
+.rag-search-icon svg { width: 16px; height: 16px; fill: currentColor; }
 .rag-search input {
 flex:1;background:none;border:none;outline:none;
 font-family:'JetBrains Mono',monospace;font-size:12px;
@@ -491,7 +483,6 @@ font-size:12px;
 .rt-bar-wrap{display:flex;align-items:center;gap:6px;}
 .rt-mini-bar{flex:1;height:3px;background:var(--border);border-radius:1px;overflow:hidden;}
 .rt-mini-fill{height:100%;background:var(--teal);box-shadow:0 0 4px var(--teal);}
-/* â•â•â• SETTINGS PAGE â•â•â• */
 .settings-grid { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
 .settings-section {
 background:var(--bg2);border:1px solid var(--border);border-radius:8px;
@@ -529,7 +520,6 @@ background:var(--bg3);border:1px solid var(--border);border-radius:5px;
 padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;
 color:var(--text2);outline:none;cursor:pointer;
 }
-/* â•â•â• KNOWLEDGE GRAPH PAGE â•â•â• */
 .graph-container {
 background:var(--bg2);border:1px solid var(--border);border-radius:8px;
 flex:1;position:relative;overflow:hidden;
@@ -543,7 +533,6 @@ display:flex;flex-direction:column;gap:6px;
 }
 .kl-item { display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text); }
 .kl-dot { width:8px;height:8px;border-radius:50%; }
-/* â•â•â• RIGHT PANEL â•â•â• */
 .right-panel {
 background:var(--bg2);border-left:1px solid var(--border2);
 overflow-y:auto;display:flex;flex-direction:column;
@@ -553,7 +542,6 @@ overflow-y:auto;display:flex;flex-direction:column;
 font-family:'JetBrains Mono',monospace;font-size:8px;
 letter-spacing:3px;color:var(--dim);margin-bottom:10px;
 }
-/* Alerts mini */
 .alert-mini {
 display:flex;gap:8px;padding:8px 10px;border-radius:5px;
 border:1px solid;margin-bottom:6px;font-size:12px;cursor:pointer;
@@ -563,7 +551,8 @@ transition:all 0.12s;
 .alert-mini.warn{border-color:rgba(255,193,7,0.2);background:rgba(255,193,7,0.03);}
 .alert-mini.info{border-color:rgba(0,229,200,0.2);background:rgba(0,229,200,0.03);}
 .alert-mini.ok  {border-color:rgba(0,229,200,0.1);background:transparent;}
-.am-icon{font-size:13px;flex-shrink:0;}
+.am-icon{font-size:13px;flex-shrink:0; display:flex; }
+.am-icon svg { width: 14px; height: 14px; fill: currentColor; }
 .am-body{flex:1;}
 .am-title{color:var(--text2);font-size:12px;margin-bottom:1px;}
 .am-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);}
@@ -575,7 +564,6 @@ cursor:pointer;transition:all 0.12s;
 }
 .am-action.t{border-color:rgba(0,229,200,0.3);color:var(--teal);}
 .am-action.t:hover{background:var(--teal-dim);}
-/* System mini */
 .sys-metrics { display:grid;grid-template-columns:1fr 1fr;gap:6px; }
 .sm-box {
 background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:8px;
@@ -584,16 +572,15 @@ background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:
 .sm-val { font-family:'Orbitron',monospace;font-size:18px;color:var(--bright);line-height:1; }
 .sm-bar { height:2px;background:var(--border);border-radius:1px;margin-top:5px;overflow:hidden; }
 .sm-fill { height:100%;background:var(--teal);box-shadow:0 0 4px var(--teal); }
-/* Telegram feed */
 .tg-msg {
 display:flex;gap:8px;padding:7px 0;
 border-bottom:1px solid var(--border2);font-size:12px;
 }
-.tg-icon{font-size:14px;flex-shrink:0;}
+.tg-icon{font-size:14px;flex-shrink:0; display:flex; }
+.tg-icon svg { width: 16px; height: 16px; fill: currentColor; }
 .tg-body{flex:1;}
 .tg-text{color:var(--text2);margin-bottom:2px;}
 .tg-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);}
-/* â•â•â• STATUS BAR â•â•â• */
 .statusbar {
 grid-column:2/-1;
 background:var(--bg2);border-top:1px solid var(--border2);
@@ -606,46 +593,48 @@ font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);
 .sb-dot.red{background:var(--red);}
 .sb-dot.yellow{background:var(--yellow);}
 .sb-right{margin-left:auto;display:flex;gap:16px;}
-/* SCROLL */
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-/* PAGE ANIM */
 .page.active { animation:pageIn 0.2s ease; }
 @keyframes pageIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
 <div class="app">
-<!-- â•â•â• ICON BAR â•â•â• -->
 <div class="iconbar">
 <div class="logo-mark">AX</div>
 <div class="icon-btn active" onclick="switchPage('dashboard')" id="ib-dashboard">
-â¬¡<span class="icon-btn-tooltip">Dashboard</span>
+<svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg>
+<span class="icon-btn-tooltip">Dashboard</span>
 </div>
 <div class="icon-btn" onclick="switchPage('chat')" id="ib-chat">
-â—Ž<span class="icon-btn-tooltip">AI Chat</span>
+<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+<span class="icon-btn-tooltip">AI Chat</span>
 </div>
 <div class="icon-btn" onclick="switchPage('sentinel')" id="ib-sentinel">
-âš <span class="icon-btn-tooltip">Sentinel</span>
+<svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.5L18.5 19H5.5L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+<span class="icon-btn-tooltip">Sentinel</span>
 <div class="ibadge"></div>
 </div>
 <div class="icon-btn" onclick="switchPage('rag')" id="ib-rag">
-â—ˆ<span class="icon-btn-tooltip">RAG Index</span>
+<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/></svg>
+<span class="icon-btn-tooltip">RAG Index</span>
 </div>
 <div class="icon-btn" onclick="switchPage('graph')" id="ib-graph">
-âŠ¹<span class="icon-btn-tooltip">Knowledge Graph</span>
+<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+<span class="icon-btn-tooltip">Knowledge Graph</span>
 </div>
 <div class="icon-sep"></div>
 <div class="icon-btn" onclick="switchPage('settings')" id="ib-settings">
-âš™<span class="icon-btn-tooltip">Settings</span>
+<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+<span class="icon-btn-tooltip">Settings</span>
 </div>
 </div>
-<!-- â•â•â• TOPBAR â•â•â• -->
 <div class="topbar">
 <div>
 <div class="topbar-title" id="page-title">DASHBOARD</div>
-<div class="topbar-path">/workspace/axon_core Â· axon_state.json</div>
+<div class="topbar-path">/workspace/axon_core ->· axon_state.json</div>
 </div>
 <div class="topbar-right">
 <div class="sys-chip">CPU <span class="val" id="cpu-top">34%</span></div>
@@ -655,171 +644,102 @@ font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);
 <div class="status-pill warn"><span style="width:6px;height:6px;border-radius:50%;background:var(--yellow)"></span>BUILD ERR</div>
 </div>
 </div>
-<!-- â•â•â• SIDEBAR â•â•â• -->
 <div class="sidebar">
 <div class="sidebar-section">
 <div class="sidebar-label">NAVIGATE</div>
 <div class="nav-item active" onclick="switchPage('dashboard')" id="nav-dashboard">
-<span class="ni-icon">â¬¡</span> Dashboard
+<svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg> Dashboard
 </div>
 <div class="nav-item" onclick="switchPage('chat')" id="nav-chat">
-<span class="ni-icon">â—Ž</span> AI Chat
+<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg> AI Chat
 </div>
 <div class="nav-item" onclick="switchPage('sentinel')" id="nav-sentinel">
-<span class="ni-icon">âš </span> Sentinel
+<svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.5L18.5 19H5.5L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg> Sentinel
 <span class="ni-badge">3</span>
 </div>
 <div class="nav-item" onclick="switchPage('rag')" id="nav-rag">
-<span class="ni-icon">â—ˆ</span> RAG Index
+<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/></svg> RAG Index
 </div>
 <div class="nav-item" onclick="switchPage('graph')" id="nav-graph">
-<span class="ni-icon">âŠ¹</span> Knowledge Graph
+<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Knowledge Graph
 </div>
 <div class="nav-item" onclick="switchPage('settings')" id="nav-settings">
-<span class="ni-icon">âš™</span> Settings
+<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Settings
 </div>
 </div>
 <div class="sidebar-section" style="flex:1">
 <div class="sidebar-label">WORKERS</div>
 <div class="worker-list">
-<div class="worker-row">
-<div class="w-dot run"></div>
-<div class="w-name">log_watcher</div>
-<div class="w-status run">RUN</div>
-</div>
-<div class="worker-row">
-<div class="w-dot idle"></div>
-<div class="w-name">build_worker</div>
-<div class="w-status">IDLE</div>
-</div>
-<div class="worker-row">
-<div class="w-dot run"></div>
-<div class="w-name">rag_indexer</div>
-<div class="w-status run">INDEX</div>
-</div>
-<div class="worker-row">
-<div class="w-dot run"></div>
-<div class="w-name">tg_handler</div>
-<div class="w-status run">LISTEN</div>
-</div>
-<div class="worker-row">
-<div class="w-dot run"></div>
-<div class="w-name">ai_orch</div>
-<div class="w-status run">INFER</div>
-</div>
+<div class="worker-row"><div class="w-dot run"></div><div class="w-name">log_watcher</div><div class="w-status run">RUN</div></div>
+<div class="worker-row"><div class="w-dot idle"></div><div class="w-name">build_worker</div><div class="w-status">IDLE</div></div>
+<div class="worker-row"><div class="w-dot run"></div><div class="w-name">rag_indexer</div><div class="w-status run">INDEX</div></div>
+<div class="worker-row"><div class="w-dot run"></div><div class="w-name">tg_handler</div><div class="w-status run">LISTEN</div></div>
+<div class="worker-row"><div class="w-dot run"></div><div class="w-name">ai_orch</div><div class="w-status run">INFER</div></div>
 </div>
 </div>
 <div class="sidebar-section">
 <div class="sidebar-label">MODEL</div>
 <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);padding:4px;">mistral:7b-q4</div>
-<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);padding:0 4px;">ollama:11434 Â· local</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);padding:0 4px;">ollama:11434 ->· local</div>
 </div>
 </div>
-<!-- â•â•â• MAIN CONTENT â•â•â• -->
 <div class="main-content">
-<!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
 <div class="stats-row">
-<div class="stat-card">
-<div class="sc-label">FILES INDEXED</div>
-<div class="sc-value teal" id="indexed-val">14,827</div>
-<div class="sc-sub">Drive E: Â· complete</div>
-<div class="sc-bar"><div class="sc-fill" style="width:100%"></div></div>
-</div>
-<div class="stat-card">
-<div class="sc-label">CRASHES FIXED</div>
-<div class="sc-value" style="color:var(--teal)">7</div>
-<div class="sc-sub">last 24h Â· 2 pending</div>
-<div class="sc-bar"><div class="sc-fill" style="width:70%"></div></div>
-</div>
-<div class="stat-card">
-<div class="sc-label">BUILD STATUS</div>
-<div class="sc-value red">FAIL</div>
-<div class="sc-sub">axon_core Â· linker err</div>
-<div class="sc-bar"><div class="sc-fill red" style="width:28%"></div></div>
-</div>
-<div class="stat-card">
-<div class="sc-label">UPTIME</div>
-<div class="sc-value yellow" id="uptime-val">04:23</div>
-<div class="sc-sub">since last restart</div>
-<div class="sc-bar"><div class="sc-fill yellow" style="width:60%"></div></div>
-</div>
+<div class="stat-card"><div class="sc-label">FILES INDEXED</div><div class="sc-value teal" id="indexed-val">14,827</div><div class="sc-sub">Drive E: ->· complete</div><div class="sc-bar"><div class="sc-fill" style="width:100%"></div></div></div>
+<div class="stat-card"><div class="sc-label">CRASHES FIXED</div><div class="sc-value" style="color:var(--teal)">7</div><div class="sc-sub">last 24h ->· 2 pending</div><div class="sc-bar"><div class="sc-fill" style="width:70%"></div></div></div>
+<div class="stat-card"><div class="sc-label">BUILD STATUS</div><div class="sc-value red">FAIL</div><div class="sc-sub">axon_core ->· linker err</div><div class="sc-bar"><div class="sc-fill red" style="width:28%"></div></div></div>
+<div class="stat-card"><div class="sc-label">UPTIME</div><div class="sc-value yellow" id="uptime-val">04:23</div><div class="sc-sub">since last restart</div><div class="sc-bar"><div class="sc-fill yellow" style="width:60%"></div></div></div>
 </div>
 <div class="build-strip">
-<div class="bs-label">LAST BUILD</div>
-<div class="bs-name">axon_core v0.3.1</div>
-<div class="bs-info">cargo build --release Â· 2m 14s Â· 14:32:07</div>
-<button class="bs-btn teal" onclick="simulateBuild()">â–¶ REBUILD</button>
-<button class="bs-btn red">âŠ˜ ABORT</button>
+<div class="bs-label">LAST BUILD</div><div class="bs-name">axon_core v0.3.1</div><div class="bs-info">cargo build --release ->· 2m 14s ->· 14:32:07</div>
+<button class="bs-btn teal" onclick="simulateBuild()"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> REBUILD</button>
+<button class="bs-btn red"><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> ABORT</button>
 </div>
 <div class="mid-row" style="flex:1;min-height:0;">
 <div class="panel">
 <div class="panel-head"><div class="ph-dot"></div>SYSTEM LOG</div>
 <div class="panel-body" id="log-panel">
-<div class="log-line"><span class="ll-time">14:30</span><span class="ll-src sys">SYS</span><span class="ll-text sys">AXON v0.3.1 initialized â€” 5 workers active</span></div>
-<div class="log-line"><span class="ll-time">14:30</span><span class="ll-src rag">RAG</span><span class="ll-text ok">Drive E: scan complete â€” 14,827 files indexed</span></div>
+<div class="log-line"><span class="ll-time">14:30</span><span class="ll-src sys">SYS</span><span class="ll-text sys">AXON v0.3.1 initialized ->€” 5 workers active</span></div>
+<div class="log-line"><span class="ll-time">14:30</span><span class="ll-src rag">RAG</span><span class="ll-text ok">Drive E: scan complete ->€” 14,827 files indexed</span></div>
 <div class="log-line"><span class="ll-time">14:31</span><span class="ll-src sys">LOG</span><span class="ll-text warn">WARN: CPU spike detected (89%)</span></div>
-<div class="log-line"><span class="ll-time">14:31</span><span class="ll-src ai">AI </span><span class="ll-text">Analyzing â†’ rayon thread pool contention</span></div>
+<div class="log-line"><span class="ll-time">14:31</span><span class="ll-src ai">AI </span><span class="ll-text">Analyzing ->†’ rayon thread pool contention</span></div>
 <div class="log-line"><span class="ll-time">14:32</span><span class="ll-src bld">BLD</span><span class="ll-text err">ERROR: linker error in axon_rag::embed</span></div>
-<div class="log-line"><span class="ll-time">14:32</span><span class="ll-src ai">AI </span><span class="ll-text">Reading 50 lines â†’ sending to mistral:7b</span></div>
+<div class="log-line"><span class="ll-time">14:32</span><span class="ll-src ai">AI </span><span class="ll-text">Reading 50 lines ->†’ sending to mistral:7b</span></div>
 <div class="log-line"><span class="ll-time">14:32</span><span class="ll-src ai">AI </span><span class="ll-text ok">Fix: missing `hnsw_rs` feature in Cargo.toml</span></div>
-<div class="log-line"><span class="ll-time">14:33</span><span class="ll-src tg">TG </span><span class="ll-text ok">Approved by user â†’ applying patch...</span></div>
+<div class="log-line"><span class="ll-time">14:33</span><span class="ll-src tg">TG </span><span class="ll-text ok">Approved by user ->†’ applying patch...</span></div>
 </div>
 </div>
 <div style="display:flex;flex-direction:column;gap:12px;">
 <div class="panel" style="flex:1">
 <div class="panel-head"><div class="ph-dot"></div>RAG OVERVIEW</div>
 <div class="panel-body">
-<div class="rag-row">
-<span class="rr-icon">ðŸ¦€</span>
-<span class="rr-name">Rust Projects</span>
-<span class="rr-count">3,241 files</span>
-<div class="rr-bar"><div class="rr-fill" style="width:85%"></div></div>
-</div>
-<div class="rag-row">
-<span class="rr-icon">â–²</span>
-<span class="rr-name">Next.js Projects</span>
-<span class="rr-count">8,102 files</span>
-<div class="rr-bar"><div class="rr-fill" style="width:100%"></div></div>
-</div>
-<div class="rag-row">
-<span class="rr-icon">ðŸ“‹</span>
-<span class="rr-name">Log Files</span>
-<span class="rr-count">1,847 files</span>
-<div class="rr-bar"><div class="rr-fill" style="width:45%;background:var(--yellow);box-shadow:0 0 5px var(--yellow)"></div></div>
-</div>
-<div class="rag-row">
-<span class="rr-icon">âš™</span>
-<span class="rr-name">Config Files</span>
-<span class="rr-count">1,637 files</span>
-<div class="rr-bar"><div class="rr-fill" style="width:40%;background:#a78bfa;box-shadow:0 0 5px #a78bfa"></div></div>
-</div>
+<div class="rag-row"><span class="rr-icon" style="color:#ff6432"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></span><span class="rr-name">Rust Projects</span><span class="rr-count">3,241 files</span><div class="rr-bar"><div class="rr-fill" style="width:85%"></div></div></div>
+<div class="rag-row"><span class="rr-icon" style="color:var(--teal)"><svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></span><span class="rr-name">Next.js Projects</span><span class="rr-count">8,102 files</span><div class="rr-bar"><div class="rr-fill" style="width:100%"></div></div></div>
+<div class="rag-row"><span class="rr-icon" style="color:var(--yellow)"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span><span class="rr-name">Log Files</span><span class="rr-count">1,847 files</span><div class="rr-bar"><div class="rr-fill" style="width:45%;background:var(--yellow);box-shadow:0 0 5px var(--yellow)"></div></div></div>
+<div class="rag-row"><span class="rr-icon" style="color:#a78bfa"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></span><span class="rr-name">Config Files</span><span class="rr-count">1,637 files</span><div class="rr-bar"><div class="rr-fill" style="width:40%;background:#a78bfa;box-shadow:0 0 5px #a78bfa"></div></div></div>
 </div>
 </div>
 <div class="panel" style="flex:1">
 <div class="panel-head"><div class="ph-dot"></div>BUILD PHASES</div>
 <div class="panel-body">
 <div class="phase-grid">
-<div class="phase-row"><div class="pr-num">1</div><div class="pr-name">Skeleton</div><div class="pr-status prs-done">âœ“ DONE</div></div>
-<div class="phase-row"><div class="pr-num">2</div><div class="pr-name">Orchestrator</div><div class="pr-status prs-active">âŸ³ ACTIVE</div></div>
-<div class="phase-row"><div class="pr-num">3</div><div class="pr-name">RAG Local</div><div class="pr-status prs-active">âŸ³ ACTIVE</div></div>
-<div class="phase-row"><div class="pr-num">4</div><div class="pr-name">Sentinel</div><div class="pr-status prs-pending">â—‹ PENDING</div></div>
-<div class="phase-row"><div class="pr-num">5</div><div class="pr-name">Persistent State</div><div class="pr-status prs-pending">â—‹ PENDING</div></div>
+<div class="phase-row"><div class="pr-num">1</div><div class="pr-name">Skeleton</div><div class="pr-status prs-done">->œ“ DONE</div></div>
+<div class="phase-row"><div class="pr-num">2</div><div class="pr-name">Orchestrator</div><div class="pr-status prs-active">->Ÿ³ ACTIVE</div></div>
+<div class="phase-row"><div class="pr-num">3</div><div class="pr-name">RAG Local</div><div class="pr-status prs-active">->Ÿ³ ACTIVE</div></div>
+<div class="phase-row"><div class="pr-num">4</div><div class="pr-name">Sentinel</div><div class="pr-status prs-pending">->—‹ PENDING</div></div>
+<div class="phase-row"><div class="pr-num">5</div><div class="pr-name">Persistent State</div><div class="pr-status prs-pending">->—‹ PENDING</div></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<!-- CHAT -->
 <div class="page" id="page-chat" style="padding:0;">
 <div class="chat-layout">
 <div class="chat-header">
-<div class="chat-avatar">â—Ž</div>
-<div>
-<div class="chat-name">AXON AI</div>
-<div class="chat-sub">mistral:7b Â· context: drive-wide RAG Â· 14,827 files</div>
-</div>
+<div class="chat-avatar"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+<div><div class="chat-name">AXON AI</div><div class="chat-sub">mistral:7b ->· context: drive-wide RAG ->· 14,827 files</div></div>
 <select class="chat-model-select" id="model-select">
 <option>mistral:7b-q4 (default)</option>
 <option>codellama:13b</option>
@@ -830,19 +750,19 @@ font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);
 </div>
 <div class="chat-messages" id="chat-messages">
 <div class="chat-msg ai">
-<div class="msg-avatar ai">â¬¡</div>
+<div class="msg-avatar ai"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg></div>
 <div>
 <div class="msg-bubble">
 <strong style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:11px;">AXON online.</strong><br><br>
-Sunt Dev OS-ul tÄƒu local. Am indexat <strong style="color:var(--teal)">14,827 fiÈ™iere</strong> de pe Drive E: â€” Rust, Next.js, loguri, config.<br><br>
+Sunt Dev OS-ul tÄƒu local. Am indexat <strong style="color:var(--teal)">14,827 fiÈ™iere</strong> de pe Drive E: ->€” Rust, Next.js, loguri, config.<br><br>
 Pot compila, repara crash-uri, cÄƒuta Ã®n codebase, analiza loguri È™i trimite confirmÄƒri pe Telegram. Ce facem?
 </div>
 <div class="msg-time">14:30:02</div>
 <div class="chat-actions">
-<div class="action-chip" onclick="sendQuick('AnalizeazÄƒ ultimul crash')">âš¡ AnalizeazÄƒ crash</div>
-<div class="action-chip" onclick="sendQuick('cargo build --release')">ðŸ”¨ Rebuild</div>
-<div class="action-chip" onclick="sendQuick('Status workers')">â—ˆ Status workers</div>
-<div class="action-chip" onclick="sendQuick('CautÄƒ Ã®n RAG: tokio async')">ðŸ” RAG search</div>
+<div class="action-chip" onclick="sendQuick('AnalizeazÄƒ ultimul crash')"><svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> AnalizeazÄƒ crash</div>
+<div class="action-chip" onclick="sendQuick('cargo build --release')"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Rebuild</div>
+<div class="action-chip" onclick="sendQuick('Status workers')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/></svg> Status workers</div>
+<div class="action-chip" onclick="sendQuick('CautÄƒ Ã®n RAG: tokio async')"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg> RAG search</div>
 </div>
 </div>
 </div>
@@ -850,41 +770,24 @@ Pot compila, repara crash-uri, cÄƒuta Ã®n codebase, analiza loguri È™i tr
 <div class="chat-input-area">
 <div class="chat-input-box">
 <textarea id="chat-input" rows="1" placeholder="ÃŽntreabÄƒ AXON... (Enter = trimite, Shift+Enter = linie nouÄƒ)"></textarea>
-<button class="send-btn" id="send-btn" onclick="sendMessage()">âž¤</button>
+<button class="send-btn" id="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
 </div>
 </div>
 </div>
 </div>
-<!-- SENTINEL -->
 <div class="page" id="page-sentinel">
 <div class="sentinel-stats">
-<div class="stat-card">
-<div class="sc-label">ACTIVE ALERTS</div>
-<div class="sc-value red">3</div>
-<div class="sc-sub">2 critical</div>
-</div>
-<div class="stat-card">
-<div class="sc-label">FIXES APPLIED</div>
-<div class="sc-value teal">7</div>
-<div class="sc-sub">last 24h</div>
-</div>
-<div class="stat-card">
-<div class="sc-label">LOG LINES/s</div>
-<div class="sc-value" id="log-rate">142</div>
-<div class="sc-sub">watched files: 8</div>
-</div>
-<div class="stat-card">
-<div class="sc-label">PROCESSES</div>
-<div class="sc-value teal">12</div>
-<div class="sc-sub">monitored</div>
-</div>
+<div class="stat-card"><div class="sc-label">ACTIVE ALERTS</div><div class="sc-value red">3</div><div class="sc-sub">2 critical</div></div>
+<div class="stat-card"><div class="sc-label">FIXES APPLIED</div><div class="sc-value teal">7</div><div class="sc-sub">last 24h</div></div>
+<div class="stat-card"><div class="sc-label">LOG LINES/s</div><div class="sc-value" id="log-rate">142</div><div class="sc-sub">watched files: 8</div></div>
+<div class="stat-card"><div class="sc-label">PROCESSES</div><div class="sc-value teal">12</div><div class="sc-sub">monitored</div></div>
 </div>
 <div class="alert-list">
 <div class="alert-card crit">
-<div class="ac-icon">ðŸ”´</div>
+<div class="ac-icon" style="color:var(--red)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
 <div class="ac-body">
-<div class="ac-title">Linker Error â€” axon_rag::embed</div>
-<div class="ac-msg">cargo build --release Â· axon_core v0.3.1 Â· 14:32:07</div>
+<div class="ac-title">Linker Error ->€” axon_rag::embed</div>
+<div class="ac-msg">cargo build --release ->· axon_core v0.3.1 ->· 14:32:07</div>
 <div class="ac-log">error[E0432]: unresolved import `hnsw_rs`
 --> src/rag/embed.rs:3:5
 |
@@ -892,122 +795,71 @@ Pot compila, repara crash-uri, cÄƒuta Ã®n codebase, analiza loguri È™i tr
 | ^^^^^^^ no external crate `hnsw_rs`
 note: add `hnsw_rs = "0.3"` to Cargo.toml [features]</div>
 <div class="ac-actions">
-<button class="ac-btn teal" onclick="applyFix(this)">âš¡ APPLY FIX</button>
-<button class="ac-btn ghost" onclick="switchPage('chat')">â—Ž Ask AI</button>
-<button class="ac-btn red">âŠ˜ DISMISS</button>
+<button class="ac-btn teal" onclick="applyFix(this)"><svg viewBox="0 0 24 24" style="width:10px;height:10px;vertical-align:middle;fill:currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> APPLY FIX</button>
+<button class="ac-btn ghost" onclick="switchPage('chat')"><svg viewBox="0 0 24 24" style="width:10px;height:10px;vertical-align:middle;fill:currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg> Ask AI</button>
+<button class="ac-btn red"><svg viewBox="0 0 24 24" style="width:10px;height:10px;vertical-align:middle;fill:currentColor"><path d="M6 6h12v12H6z"/></svg> DISMISS</button>
 <div class="ac-meta">AI confidence: 94%</div>
 </div>
 </div>
 </div>
 <div class="alert-card warn">
-<div class="ac-icon">ðŸŸ¡</div>
+<div class="ac-icon" style="color:var(--yellow)"><svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></div>
 <div class="ac-body">
 <div class="ac-title">CPU Spike Detected</div>
-<div class="ac-msg">rayon thread pool Â· peak 89% Â· process: axon_rag_indexer</div>
+<div class="ac-msg">rayon thread pool ->· peak 89% ->· process: axon_rag_indexer</div>
 <div class="ac-log">14:31:02 WARN rayon::pool: thread contention detected
 14:31:02 INFO workers: 16 threads competing for 8 cores
 14:31:03 WARN cpu: 89% sustained for 12s
 14:31:04 AI: suggest reduce rayon::ThreadPoolBuilder num_threads to 4</div>
 <div class="ac-actions">
-<button class="ac-btn teal" onclick="applyFix(this)">âš¡ APPLY FIX</button>
-<button class="ac-btn ghost">â—Ž Analyze</button>
+<button class="ac-btn teal" onclick="applyFix(this)"><svg viewBox="0 0 24 24" style="width:10px;height:10px;vertical-align:middle;fill:currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> APPLY FIX</button>
+<button class="ac-btn ghost"><svg viewBox="0 0 24 24" style="width:10px;height:10px;vertical-align:middle;fill:currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Analyze</button>
 </div>
 </div>
 </div>
 <div class="alert-card info">
-<div class="ac-icon">ðŸ”µ</div>
+<div class="ac-icon" style="color:var(--teal)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
 <div class="ac-body">
 <div class="ac-title">RAG Indexing In Progress</div>
-<div class="ac-msg">embed batch 47/120 Â· ETA: ~3 min Â· model: nomic-embed-text</div>
-<div class="ac-actions">
-<button class="ac-btn ghost">âŠ˜ Pause</button>
-</div>
+<div class="ac-msg">embed batch 47/120 ->· ETA: ~3 min ->· model: nomic-embed-text</div>
+<div class="ac-actions"><button class="ac-btn ghost"><svg viewBox="0 0 24 24" style="width:10px;height:10px;vertical-align:middle;fill:currentColor"><path d="M6 6h12v12H6z"/></svg> Pause</button></div>
 </div>
 </div>
 <div class="alert-card ok">
-<div class="ac-icon">ðŸŸ¢</div>
+<div class="ac-icon" style="color:var(--teal);opacity:0.7"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
 <div class="ac-body">
 <div class="ac-title">Test Suite Passed</div>
-<div class="ac-msg">axon_core Â· 312/312 tests Â· 2.4s Â· confirmed via Telegram</div>
+<div class="ac-msg">axon_core ->· 312/312 tests ->· 2.4s ->· confirmed via Telegram</div>
 </div>
 </div>
 </div>
 </div>
-<!-- RAG -->
 <div class="page" id="page-rag">
 <div class="rag-stats">
-<div class="stat-card">
-<div class="sc-label">TOTAL INDEXED</div>
-<div class="sc-value teal" id="rag-total">14,827</div>
-<div class="sc-sub">Drive E: complete scan</div>
-</div>
-<div class="stat-card">
-<div class="sc-label">EMBEDDINGS</div>
-<div class="sc-value">47K</div>
-<div class="sc-sub">nomic-embed-text</div>
-</div>
-<div class="stat-card">
-<div class="sc-label">INDEX SIZE</div>
-<div class="sc-value yellow">284MB</div>
-<div class="sc-sub">HNSW vector store</div>
-</div>
+<div class="stat-card"><div class="sc-label">TOTAL INDEXED</div><div class="sc-value teal" id="rag-total">14,827</div><div class="sc-sub">Drive E: complete scan</div></div>
+<div class="stat-card"><div class="sc-label">EMBEDDINGS</div><div class="sc-value">47K</div><div class="sc-sub">nomic-embed-text</div></div>
+<div class="stat-card"><div class="sc-label">INDEX SIZE</div><div class="sc-value yellow">284MB</div><div class="sc-sub">HNSW vector store</div></div>
 </div>
 <div class="rag-search">
-<span class="rag-search-icon">ðŸ”</span>
+<span class="rag-search-icon"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
 <input type="text" placeholder="CautÄƒ Ã®n codebase: ex. tokio::spawn, useEffect, error handling..." id="rag-search-input" oninput="ragSearch(this.value)"/>
 </div>
 <div class="rag-table">
-<div class="rt-head">
-<span>PATH</span>
-<span>TYPE</span>
-<span>FILES</span>
-<span>RELEVANCE</span>
-</div>
-<div class="rt-row">
-<div class="rt-name">ðŸ¦€ /workspace/axon_core/src/</div>
-<div><span class="rt-lang rust">Rust</span></div>
-<div class="rt-count">1,204</div>
-<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:95%"></div></div></div>
-</div>
-<div class="rt-row">
-<div class="rt-name">â–² /workspace/axon-ui/src/</div>
-<div><span class="rt-lang next">Next.js</span></div>
-<div class="rt-count">3,841</div>
-<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:82%"></div></div></div>
-</div>
-<div class="rt-row">
-<div class="rt-name">ðŸ¦€ /workspace/rag_engine/</div>
-<div><span class="rt-lang rust">Rust</span></div>
-<div class="rt-count">892</div>
-<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:74%"></div></div></div>
-</div>
-<div class="rt-row">
-<div class="rt-name">â–² /workspace/axon-dashboard/</div>
-<div><span class="rt-lang next">Next.js</span></div>
-<div class="rt-count">4,261</div>
-<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:100%"></div></div></div>
-</div>
-<div class="rt-row">
-<div class="rt-name">ðŸ“‹ E:/logs/axon/</div>
-<div><span class="rt-lang log">Logs</span></div>
-<div class="rt-count">1,847</div>
-<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:45%;background:var(--yellow)"></div></div></div>
-</div>
-<div class="rt-row">
-<div class="rt-name">âš™ E:/configs/</div>
-<div><span class="rt-lang cfg">Config</span></div>
-<div class="rt-count">1,637</div>
-<div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:40%;background:#a78bfa"></div></div></div>
-</div>
+<div class="rt-head"><span>PATH</span><span>TYPE</span><span>FILES</span><span>RELEVANCE</span></div>
+<div class="rt-row"><div class="rt-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#ff6432"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> /workspace/axon_core/src/</div><div><span class="rt-lang rust">Rust</span></div><div class="rt-count">1,204</div><div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:95%"></div></div></div></div>
+<div class="rt-row"><div class="rt-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--teal)"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> /workspace/axon-ui/src/</div><div><span class="rt-lang next">Next.js</span></div><div class="rt-count">3,841</div><div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:82%"></div></div></div></div>
+<div class="rt-row"><div class="rt-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#ff6432"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> /workspace/rag_engine/</div><div><span class="rt-lang rust">Rust</span></div><div class="rt-count">892</div><div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:74%"></div></div></div></div>
+<div class="rt-row"><div class="rt-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--teal)"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> /workspace/axon-dashboard/</div><div><span class="rt-lang next">Next.js</span></div><div class="rt-count">4,261</div><div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:100%"></div></div></div></div>
+<div class="rt-row"><div class="rt-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--yellow)"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> E:/logs/axon/</div><div><span class="rt-lang log">Logs</span></div><div class="rt-count">1,847</div><div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:45%;background:var(--yellow)"></div></div></div></div>
+<div class="rt-row"><div class="rt-name"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#a78bfa"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> E:/configs/</div><div><span class="rt-lang cfg">Config</span></div><div class="rt-count">1,637</div><div class="rt-bar-wrap"><div class="rt-mini-bar"><div class="rt-mini-fill" style="width:40%;background:#a78bfa"></div></div></div></div>
 </div>
 <div id="rag-results" style="display:none;" class="panel">
 <div class="panel-head"><div class="ph-dot"></div>SEARCH RESULTS</div>
 <div class="panel-body" id="rag-results-body"></div>
 </div>
 </div>
-<!-- GRAPH -->
 <div class="page" id="page-graph" style="padding:16px;">
-<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:10px;">KNOWLEDGE GRAPH â€” AXON SYSTEM MAP</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:10px;">KNOWLEDGE GRAPH ->€” AXON SYSTEM MAP</div>
 <div class="graph-container">
 <canvas id="kg-canvas"></canvas>
 <div class="kg-legend">
@@ -1019,186 +871,70 @@ note: add `hnsw_rs = "0.3"` to Cargo.toml [features]</div>
 </div>
 </div>
 </div>
-<!-- SETTINGS -->
 <div class="page" id="page-settings">
 <div style="font-family:'Orbitron',monospace;font-size:13px;color:var(--teal);letter-spacing:2px;margin-bottom:4px;">AXON SETTINGS</div>
 <div class="settings-grid">
 <div class="settings-section">
 <div class="ss-head">AI MODEL</div>
 <div class="ss-body">
-<div>
-<div class="sr-label" style="margin-bottom:6px;">Ollama Endpoint</div>
-<input class="settings-input" value="http://localhost:11434"/>
-</div>
-<div>
-<div class="sr-label" style="margin-bottom:6px;">Default Model</div>
-<select class="settings-select" style="width:100%">
-<option>mistral:7b-q4</option>
-<option>codellama:13b</option>
-<option>deepseek-coder:6.7b</option>
-<option>llama3:8b</option>
-</select>
-</div>
-<div class="setting-row">
-<div><div class="sr-label">Auto Model Routing</div><div class="sr-sub">code â†’ codellama, chat â†’ mistral</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
+<div><div class="sr-label" style="margin-bottom:6px;">Ollama Endpoint</div><input class="settings-input" value="http://localhost:11434"/></div>
+<div><div class="sr-label" style="margin-bottom:6px;">Default Model</div><select class="settings-select" style="width:100%"><option>mistral:7b-q4</option><option>codellama:13b</option><option>deepseek-coder:6.7b</option><option>llama3:8b</option></select></div>
+<div class="setting-row"><div><div class="sr-label">Auto Model Routing</div><div class="sr-sub">code ->†’ codellama, chat ->†’ mistral</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
 </div>
 </div>
 <div class="settings-section">
 <div class="ss-head">SENTINEL</div>
 <div class="ss-body">
-<div class="setting-row">
-<div><div class="sr-label">Log Watcher</div><div class="sr-sub">Monitor .log files</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
-<div class="setting-row">
-<div><div class="sr-label">Auto Fix Loop</div><div class="sr-sub">Propose + apply fixes</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
-<div class="setting-row">
-<div><div class="sr-label">Require Approval</div><div class="sr-sub">Ask via Telegram before fix</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
-<div class="setting-row">
-<div><div class="sr-label">Process Watcher</div><div class="sr-sub">Monitor running processes</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
+<div class="setting-row"><div><div class="sr-label">Log Watcher</div><div class="sr-sub">Monitor .log files</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="setting-row"><div><div class="sr-label">Auto Fix Loop</div><div class="sr-sub">Propose + apply fixes</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="setting-row"><div><div class="sr-label">Require Approval</div><div class="sr-sub">Ask via Telegram before fix</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="setting-row"><div><div class="sr-label">Process Watcher</div><div class="sr-sub">Monitor running processes</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
 </div>
 </div>
 <div class="settings-section">
 <div class="ss-head">TELEGRAM</div>
 <div class="ss-body">
-<div>
-<div class="sr-label" style="margin-bottom:6px;">Bot Token</div>
-<input class="settings-input" type="password" value="7412389012:AAH_placeholder_token"/>
-</div>
-<div>
-<div class="sr-label" style="margin-bottom:6px;">Chat ID</div>
-<input class="settings-input" value="123456789"/>
-</div>
-<div class="setting-row">
-<div><div class="sr-label">Alert Notifications</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
-<div class="setting-row">
-<div><div class="sr-label">Build Reports</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
+<div><div class="sr-label" style="margin-bottom:6px;">Bot Token</div><input class="settings-input" type="password" value="7412389012:AAH_placeholder_token"/></div>
+<div><div class="sr-label" style="margin-bottom:6px;">Chat ID</div><input class="settings-input" value="123456789"/></div>
+<div class="setting-row"><div><div class="sr-label">Alert Notifications</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div class="setting-row"><div><div class="sr-label">Build Reports</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
 </div>
 </div>
 <div class="settings-section">
 <div class="ss-head">RAG ENGINE</div>
 <div class="ss-body">
-<div>
-<div class="sr-label" style="margin-bottom:6px;">Scan Root</div>
-<input class="settings-input" value="E:/"/>
-</div>
-<div>
-<div class="sr-label" style="margin-bottom:6px;">Embed Model</div>
-<select class="settings-select" style="width:100%">
-<option>nomic-embed-text</option>
-<option>mxbai-embed-large</option>
-<option>all-minilm</option>
-</select>
-</div>
-<div class="setting-row">
-<div><div class="sr-label">Auto Re-index</div><div class="sr-sub">Watch for file changes</div></div>
-<div class="toggle on" onclick="this.classList.toggle('on')"></div>
-</div>
-<div>
-<div class="sr-label" style="margin-bottom:6px;">Exclude Patterns</div>
-<input class="settings-input" value="node_modules/, target/, .git/"/>
+<div><div class="sr-label" style="margin-bottom:6px;">Scan Root</div><input class="settings-input" value="E:/"/></div>
+<div><div class="sr-label" style="margin-bottom:6px;">Embed Model</div><select class="settings-select" style="width:100%"><option>nomic-embed-text</option><option>mxbai-embed-large</option><option>all-minilm</option></select></div>
+<div class="setting-row"><div><div class="sr-label">Auto Re-index</div><div class="sr-sub">Watch for file changes</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+<div><div class="sr-label" style="margin-bottom:6px;">Exclude Patterns</div><input class="settings-input" value="node_modules/, target/, .git/"/></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><!-- end main-content -->
-<!-- â•â•â• RIGHT PANEL â•â•â• -->
 <div class="right-panel">
 <div class="rp-section">
 <div class="rp-label">SENTINEL ALERTS</div>
-<div class="alert-mini crit">
-<div class="am-icon">ðŸ”´</div>
-<div class="am-body">
-<div class="am-title">Linker Error</div>
-<div class="am-sub">axon_rag::embed Â· hnsw_rs</div>
-</div>
-<div class="am-action t" onclick="switchPage('sentinel')">FIX</div>
-</div>
-<div class="alert-mini warn">
-<div class="am-icon">ðŸŸ¡</div>
-<div class="am-body">
-<div class="am-title">CPU Spike 89%</div>
-<div class="am-sub">rayon pool contention</div>
-</div>
-<div class="am-action t" onclick="switchPage('sentinel')">VIEW</div>
-</div>
-<div class="alert-mini info">
-<div class="am-icon">ðŸ”µ</div>
-<div class="am-body">
-<div class="am-title">RAG Indexing</div>
-<div class="am-sub">batch 47/120 Â· 3min ETA</div>
-</div>
-</div>
-<div class="alert-mini ok">
-<div class="am-icon">ðŸŸ¢</div>
-<div class="am-body">
-<div class="am-title">Tests Passed</div>
-<div class="am-sub">312/312 Â· 2.4s</div>
-</div>
-</div>
+<div class="alert-mini crit"><div class="am-icon" style="color:var(--red)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div><div class="am-body"><div class="am-title">Linker Error</div><div class="am-sub">axon_rag::embed ->· hnsw_rs</div></div><div class="am-action t" onclick="switchPage('sentinel')">FIX</div></div>
+<div class="alert-mini warn"><div class="am-icon" style="color:var(--yellow)"><svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></div><div class="am-body"><div class="am-title">CPU Spike 89%</div><div class="am-sub">rayon pool contention</div></div><div class="am-action t" onclick="switchPage('sentinel')">VIEW</div></div>
+<div class="alert-mini info"><div class="am-icon" style="color:var(--teal)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div><div class="am-body"><div class="am-title">RAG Indexing</div><div class="am-sub">batch 47/120 ->· 3min ETA</div></div></div>
+<div class="alert-mini ok"><div class="am-icon" style="color:var(--teal);opacity:0.7"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div class="am-body"><div class="am-title">Tests Passed</div><div class="am-sub">312/312 ->· 2.4s</div></div></div>
 </div>
 <div class="rp-section">
 <div class="rp-label">SYSTEM</div>
 <div class="sys-metrics">
-<div class="sm-box">
-<div class="sm-label">CPU</div>
-<div class="sm-val" id="cpu-r">34%</div>
-<div class="sm-bar"><div class="sm-fill" id="cpu-rbar" style="width:34%"></div></div>
-</div>
-<div class="sm-box">
-<div class="sm-label">VRAM</div>
-<div class="sm-val">5.2G</div>
-<div class="sm-bar"><div class="sm-fill" style="width:65%;background:#a78bfa;box-shadow:0 0 4px #a78bfa"></div></div>
-</div>
-<div class="sm-box">
-<div class="sm-label">RAM</div>
-<div class="sm-val">11G</div>
-<div class="sm-bar"><div class="sm-fill" style="width:71%"></div></div>
-</div>
-<div class="sm-box">
-<div class="sm-label">DISK E:</div>
-<div class="sm-val">847G</div>
-<div class="sm-bar"><div class="sm-fill" style="width:55%"></div></div>
-</div>
+<div class="sm-box"><div class="sm-label">CPU</div><div class="sm-val" id="cpu-r">34%</div><div class="sm-bar"><div class="sm-fill" id="cpu-rbar" style="width:34%"></div></div></div>
+<div class="sm-box"><div class="sm-label">VRAM</div><div class="sm-val">5.2G</div><div class="sm-bar"><div class="sm-fill" style="width:65%;background:#a78bfa;box-shadow:0 0 4px #a78bfa"></div></div></div>
+<div class="sm-box"><div class="sm-label">RAM</div><div class="sm-val">11G</div><div class="sm-bar"><div class="sm-fill" style="width:71%"></div></div></div>
+<div class="sm-box"><div class="sm-label">DISK E:</div><div class="sm-val">847G</div><div class="sm-bar"><div class="sm-fill" style="width:55%"></div></div></div>
 </div>
 </div>
 <div class="rp-section" style="flex:1">
 <div class="rp-label">TELEGRAM FEED</div>
 <div id="tg-feed">
-<div class="tg-msg">
-<div class="tg-icon">ðŸ“±</div>
-<div class="tg-body">
-<div class="tg-text">Fix approved by user</div>
-<div class="tg-meta">14:33:07 Â· @you</div>
-</div>
-</div>
-<div class="tg-msg">
-<div class="tg-icon">ðŸ¤–</div>
-<div class="tg-body">
-<div class="tg-text">âš  Linker error detected. Fix ready. Approve?</div>
-<div class="tg-meta">14:32:12 Â· AXON</div>
-</div>
-</div>
-<div class="tg-msg">
-<div class="tg-icon">ðŸ¤–</div>
-<div class="tg-body">
-<div class="tg-text">âœ… Build started â€” axon_core v0.3.1</div>
-<div class="tg-meta">14:30:45 Â· AXON</div>
-</div>
-</div>
+<div class="tg-msg"><div class="tg-icon" style="color:#34d399"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></div><div class="tg-body"><div class="tg-text">Fix approved by user</div><div class="tg-meta">14:33:07 ->· @you</div></div></div>
+<div class="tg-msg"><div class="tg-icon" style="color:var(--teal)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="tg-body"><div class="tg-text">->š  Linker error detected. Fix ready. Approve?</div><div class="tg-meta">14:32:12 ->· AXON</div></div></div>
+<div class="tg-msg"><div class="tg-icon" style="color:var(--teal)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="tg-body"><div class="tg-text">->œ… Build started ->€” axon_core v0.3.1</div><div class="tg-meta">14:30:45 ->· AXON</div></div></div>
 </div>
 </div>
 <div class="rp-section">
@@ -1211,20 +947,26 @@ note: add `hnsw_rs = "0.3"` to Cargo.toml [features]</div>
 </div>
 </div>
 </div>
-<!-- â•â•â• STATUS BAR â•â•â• -->
 <div class="statusbar">
 <div class="sb-item"><div class="sb-dot teal"></div>Ollama:11434</div>
 <div class="sb-item"><div class="sb-dot teal"></div>Telegram:OK</div>
 <div class="sb-item"><div class="sb-dot red"></div>Build:FAIL</div>
 <div class="sb-item"><div class="sb-dot teal"></div>RAG:indexing</div>
-<div class="sb-right">
-<span>AXON v0.3.1-dev</span>
-<span id="clock-sb">14:33:07</span>
+<div class="sb-right"><span>AXON v0.3.1-dev</span><span id="clock-sb">14:33:07</span></div>
 </div>
 </div>
-</div><!-- end app -->
 <script>
-// â•â•â• PAGE SWITCHING â•â•â•
+// ->• ->• ->•  SECURITY: escapeHtml FUNCTION ->• ->• ->•
+function escapeHtml(text) {
+if (!text) return '';
+return text
+.replace(/&/g, '&amp;')
+.replace(/</g, '&lt;')
+.replace(/>/g, '&gt;')
+.replace(/"/g, '&quot;')
+.replace(/'/g, '&#039;');
+}
+// ->• ->• ->•  PAGE SWITCHING ->• ->• ->•
 const pages = ['dashboard','chat','sentinel','rag','graph','settings'];
 const titles = {dashboard:'DASHBOARD',chat:'AI CHAT',sentinel:'SENTINEL',rag:'RAG INDEX',graph:'KNOWLEDGE GRAPH',settings:'SETTINGS'};
 function switchPage(page) {
@@ -1239,14 +981,14 @@ document.getElementById('ib-'+page)?.classList.add('active');
 document.getElementById('page-title').textContent = titles[page];
 if(page === 'graph') setTimeout(initGraph, 50);
 }
-// â•â•â• CLOCK â•â•â•
+// ->• ->• ->•  CLOCK ->• ->• ->•
 function updateClock() {
 const n = new Date();
 const t = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
 document.getElementById('clock-sb').textContent = t;
 }
 setInterval(updateClock, 1000);
-// â•â•â• UPTIME â•â•â•
+// ->• ->• ->•  UPTIME ->• ->• ->•
 let uptimeSec = 4*3600+23*60+11;
 setInterval(()=>{
 uptimeSec++;
@@ -1256,7 +998,7 @@ document.getElementById('uptime-r').textContent=t;
 const short=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
 document.getElementById('uptime-val').textContent=short;
 },1000);
-// â•â•â• CPU LIVE â•â•â•
+// ->• ->• ->•  CPU LIVE ->• ->• ->•
 let cpu=34;
 setInterval(()=>{
 cpu=Math.max(8,Math.min(92,cpu+(Math.random()-0.45)*9));
@@ -1269,40 +1011,38 @@ bar.style.width=v+'%';
 bar.style.background=c;
 bar.style.boxShadow=`0 0 4px ${c}`;
 },2000);
-// â•â•â• LOG RATE LIVE â•â•â•
+// ->• ->• ->•  LOG RATE LIVE ->• ->• ->•
 setInterval(()=>{
 const r=document.getElementById('log-rate');
 if(r) r.textContent=Math.floor(120+Math.random()*60);
 },3000);
-// â•â•â• BUILD SIMULATE â•â•â•
+// ->• ->• ->•  BUILD SIMULATE ->• ->• ->•
 function simulateBuild() {
 const panel=document.getElementById('log-panel');
 const t=new Date();
 const ts=`${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
 const addLine=(src,cls,txt)=>{
 const d=document.createElement('div');d.className='log-line';
-d.textContent =`<span class="ll-time">${ts}</span><span class="ll-src ${cls}">${src}</span><span class="ll-text ${cls}">${txt}</span>`;
+d.innerHTML = `<span class="ll-time">${ts}</span><span class="ll-src ${cls}">${escapeHtml(src)}</span><span class="ll-text ${cls}">${escapeHtml(txt)}</span>`;
 panel.appendChild(d);panel.scrollTop=panel.scrollHeight;
 };
 addLine('BLD','bld','Starting cargo build --release...');
 setTimeout(()=>addLine('BLD','bld','Compiling axon_core v0.3.1'),500);
 setTimeout(()=>addLine('BLD','bld','Compiling axon_rag v0.2.0'),1200);
-setTimeout(()=>addLine('BLD','ok','Build complete â†’ axon_core [optimized]'),2500);
+setTimeout(()=>addLine('BLD','ok','Build complete ->†’ axon_core [optimized]'),2500);
 }
-// â•â•â• APPLY FIX â•â•â•
+// ->• ->• ->•  APPLY FIX ->• ->• ->•
 function applyFix(btn) {
-btn.textContent='Applying...';btn.disabled=true;
-setTimeout(()=>{
-btn.textContent='âœ“ APPLIED';
+btn.innerHTML='<svg viewBox="0 0 24 24" style="width:10px;height:10px;vertical-align:middle;fill:currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> APPLIED';
+btn.disabled=true;
 btn.style.color='var(--teal)';
 btn.style.borderColor='rgba(0,229,200,0.4)';
 const feed=document.getElementById('tg-feed');
 const d=document.createElement('div');d.className='tg-msg';
-d.textContent =`<div class="tg-icon">ðŸ¤–</div><div class="tg-body"><div class="tg-text">âœ… Fix applied successfully. Running tests...</div><div class="tg-meta">just now Â· AXON</div></div>`;
+d.innerHTML = `<div class="tg-icon" style="color:var(--teal)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div><div class="tg-body"><div class="tg-text">->œ… Fix applied successfully. Running tests...</div><div class="tg-meta">just now ->· AXON</div></div>`;
 feed.insertBefore(d,feed.firstChild);
-},1500);
 }
-// â•â•â• CHAT â•â•â•
+// ->• ->• ->•  CHAT ->• ->• ->•
 const chatInput=document.getElementById('chat-input');
 chatInput.addEventListener('keydown',e=>{
 if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
@@ -1311,58 +1051,51 @@ chatInput.addEventListener('input',function(){
 this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';
 });
 function sendQuick(txt){chatInput.value=txt;sendMessage();}
-
-// â•â•â• sendMessage â€” WS VERSION (non-async, fire-and-forget) â•â•â•
+// ->• ->• ->•  sendMessage ->€” WS VERSION ->• ->• ->•
 function sendMessage() {
-  const input = document.getElementById('chat-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  const btn = document.getElementById('send-btn');
-
-  addMsg('user', msg);
-  input.value = '';
-  input.style.height = 'auto';
-  btn.disabled = true;
-
-  const typing = addTyping();
-
-  const sent = sendToAxon({
-    type: "Chat",
-    payload: { message: msg }
-  });
-
-  if (!sent) {
-    typing.remove();
-    addMsg('ai', 'âš  WebSocket not connected (ws://127.0.0.1:7878/ws)');
-    btn.disabled = false;
-    return;
-  }
-
-  // rÄƒspunsul vine pe WS â†’ ChatResponse scoate typing
-  setTimeout(() => { btn.disabled = false; }, 500);
+const input = document.getElementById('chat-input');
+const msg = input.value.trim();
+if (!msg) return;
+const btn = document.getElementById('send-btn');
+addMsg('user', msg);
+input.value = '';
+input.style.height = 'auto';
+btn.disabled = true;
+const typing = addTyping();
+const sent = sendToAxon({
+type: "Chat",
+payload: { message: msg }
+});
+if (!sent) {
+typing.remove();
+addMsg('ai', '->š  WebSocket not connected (ws://127.0.0.1:7878/ws)');
+btn.disabled = false;
+return;
 }
-
+setTimeout(() => { btn.disabled = false; }, 500);
+}
 let chatHistory=[];
 function getChatHistory(newMsg){
 chatHistory.push({role:'user',content:newMsg});
 if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
 return chatHistory;
 }
+// ->• ->• ->•  addMsg ->€” 100% SAFE MARKDOWN RENDER ->• ->• ->•
 function addMsg(role,text){
 const container=document.getElementById('chat-messages');
 const now=new Date();
 const ts=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
 const div=document.createElement('div');
 div.className=`chat-msg ${role}`;
-// Convert markdown-ish to html
-let html=text
-.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,lang,code)=>`<div class="msg-code">${code.trim()}</div>`)
-.replace(/`([^`]+)`/g,'<code style="background:var(--bg2);padding:1px 5px;border-radius:3px;font-family:JetBrains Mono,monospace;font-size:11px;color:#a78bfa">$1</code>')
-.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
-.replace(/\n/g,'<br>');
-const avatar=role==='ai'?'<div class="msg-avatar ai">â¬¡</div>':'<div class="msg-avatar user-av">â–¶</div>';
-div.textContent =`${avatar}<div><div class="msg-bubble">${html}</div><div class="msg-time">${ts}</div></div>`;
+// ðŸ”’ SECURITY: Escape first, THEN apply markdown
+let safeText = escapeHtml(text);
+let html = safeText
+.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => `<div class="msg-code">${escapeHtml(code.trim())}</div>`)
+.replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`)
+.replace(/\*\*([^*]+)\*\*/g, (_, bold) => `<strong>${escapeHtml(bold)}</strong>`)
+.replace(/\n/g, '<br>');
+const avatar=role==='ai'?'<div class="msg-avatar ai"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg></div>':'<div class="msg-avatar user-av"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>';
+div.innerHTML = `${avatar}<div><div class="msg-bubble">${html}</div><div class="msg-time">${ts}</div></div>`;
 container.appendChild(div);
 container.scrollTop=container.scrollHeight;
 if(role==='ai'){chatHistory.push({role:'assistant',content:text});}
@@ -1371,29 +1104,29 @@ return div;
 function addTyping(){
 const container=document.getElementById('chat-messages');
 const div=document.createElement('div');div.className='chat-msg ai';
-div.textContent =`<div class="msg-avatar ai">â¬¡</div><div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div></div>`;
+div.innerHTML = `<div class="msg-avatar ai"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg></div><div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div></div>`;
 container.appendChild(div);container.scrollTop=container.scrollHeight;
 return div;
 }
-// â•â•â• RAG SEARCH â•â•â•
+// ->• ->• ->•  RAG SEARCH ->• ->• ->•
 function ragSearch(q){
 const res=document.getElementById('rag-results');
 const body=document.getElementById('rag-results-body');
 if(!q){res.style.display='none';return;}
 res.style.display='flex';
-body.textContent =`
-<div class="log-line"><span class="ll-src rag">RAG</span><span class="ll-text ok">Found 3 relevant chunks for "${q}"</span></div>
+body.innerHTML = `
+<div class="log-line"><span class="ll-src rag">RAG</span><span class="ll-text ok">Found 3 relevant chunks for "${escapeHtml(q)}"</span></div>
 <div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:4px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);line-height:1.7;">
 <div style="color:var(--teal);margin-bottom:4px;">ðŸ“„ src/rag/embed.rs:42</div>
-<div>// TODO: integrate ${q} with hnsw_rs vector store</div>
+<div>// TODO: integrate ${escapeHtml(q)} with hnsw_rs vector store</div>
 </div>
 <div style="margin-top:6px;padding:8px;background:var(--bg3);border-radius:4px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);line-height:1.7;">
 <div style="color:#a78bfa;margin-bottom:4px;">ðŸ“„ src/workers/rag_indexer.rs:118</div>
-<div>pub async fn index_chunk(chunk: &str) â†’ Result&lt;Vec&lt;f32&gt;&gt;</div>
+<div>pub async fn index_chunk(chunk: &amp;str) ->†’ Result&lt;Vec&lt;f32&gt;&gt;</div>
 </div>
 `;
 }
-// â•â•â• KNOWLEDGE GRAPH â•â•â•
+// ->• ->• ->•  KNOWLEDGE GRAPH ->• ->• ->•
 function initGraph(){
 const canvas=document.getElementById('kg-canvas');if(!canvas)return;
 const ctx=canvas.getContext('2d');
@@ -1415,54 +1148,44 @@ const edges=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[2,7],[0,8],[3,9],[1,4],[4,5],[
 let frame=0;
 function draw(){
 ctx.clearRect(0,0,W,H);
-// BG grid
 ctx.strokeStyle='rgba(26,42,56,0.4)';ctx.lineWidth=1;
 for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
 for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-// Animate nodes
 nodes.forEach((n,i)=>{
 if(i===0)return;
 n.x+=n.vx;n.y+=n.vy;
 if(n.x<n.r||n.x>W-n.r)n.vx*=-1;
 if(n.y<n.r||n.y>H-n.r)n.vy*=-1;
 });
-// Edges
 edges.forEach(([a,b])=>{
 const na=nodes[a],nb=nodes[b];
 const pulse=(Math.sin(frame*0.03+a*0.5)+1)/2;
 ctx.strokeStyle=`rgba(0,229,200,${0.06+pulse*0.12})`;
 ctx.lineWidth=1+pulse*0.5;
 ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.stroke();
-// Packet animation
 const t=(frame*0.008+a*0.3)%1;
 const px=na.x+(nb.x-na.x)*t,py=na.y+(nb.y-na.y)*t;
 ctx.fillStyle='rgba(0,229,200,0.8)';
 ctx.beginPath();ctx.arc(px,py,2,0,Math.PI*2);ctx.fill();
 });
-// Nodes
 nodes.forEach(n=>{
 const pulse=(Math.sin(frame*0.05+n.id*0.7)+1)/2;
-// Glow
 const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.5);
 g.addColorStop(0,n.glow.replace(/[\d.]+\)$/,(0.15+pulse*0.15).toFixed(2)+')'));
 g.addColorStop(1,'transparent');
 ctx.fillStyle=g;
 ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2);ctx.fill();
-// Ring
 ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
 ctx.globalAlpha=0.3+pulse*0.4;
 ctx.beginPath();ctx.arc(n.x,n.y,n.r+4+pulse*3,0,Math.PI*2);ctx.stroke();
 ctx.globalAlpha=1;
-// Circle
 ctx.fillStyle=n.id===0?'rgba(0,229,200,0.15)':'rgba(10,16,24,0.8)';
 ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
 ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();ctx.stroke();
-// Label
 ctx.fillStyle=n.color;
 ctx.font=`${n.id===0?'700 11':'600 9'}px JetBrains Mono`;
 ctx.textAlign='center';
 ctx.fillText(n.label,n.x,n.y+(n.id===0?4:3));
-// Sub label
 if(n.id!==0){
 ctx.fillStyle='rgba(140,168,188,0.7)';
 ctx.font='8px DM Sans';
@@ -1475,87 +1198,77 @@ requestAnimationFrame(draw);
 draw();
 }
 </script>
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<!-- AXON_WS_BRIDGE â€” CORRECTED (port 7878 + proper WS handling) -->
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->•  -->
+<!-- AXON_WS_BRIDGE ->€” PRODUCTION READY (port 7878) -->
+<!-- ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->• ->•  -->
 <script>
-// â•â•â• CONFIG â•â•â•
-const AXON_WS_URL = "ws://127.0.0.1:7878/ws";  // â† PORT CORECT
+// ->• ->• ->•  CONFIG ->• ->• ->•
+const AXON_WS_URL = "ws://127.0.0.1:7878/ws";
 let axonSocket = null;
-
-// â•â•â• CONNECT â•â•â•
+// ->• ->• ->•  CONNECT ->• ->• ->•
 function connectAxon() {
-  if (axonSocket && axonSocket.readyState === WebSocket.OPEN) return;
-  console.log("ðŸ”Œ Connecting:", AXON_WS_URL);
-  axonSocket = new WebSocket(AXON_WS_URL);
-
-  axonSocket.onopen = () => {
-    console.log("âœ… AXON WS Connected");
-  };
-
-  axonSocket.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      handleAxonEvent(data);
-    } catch(e) {
-      console.error("WS parse:", e);
-    }
-  };
-
-  axonSocket.onclose = () => {
-    console.warn("âš  WS closed. Reconnecting...");
-    setTimeout(connectAxon, 3000);
-  };
+if (axonSocket && axonSocket.readyState === WebSocket.OPEN) return;
+console.log("ðŸ”Œ Connecting:", AXON_WS_URL);
+axonSocket = new WebSocket(AXON_WS_URL);
+axonSocket.onopen = () => {
+console.log("->œ… AXON WS Connected");
+};
+axonSocket.onmessage = (event) => {
+try {
+const data = JSON.parse(event.data);
+handleAxonEvent(data);
+} catch(e) {
+console.error("WS parse:", e);
 }
-
-// â•â•â• SEND (fire-and-forget) â•â•â•
+};
+axonSocket.onclose = () => {
+console.warn("->š  WS closed. Reconnecting...");
+setTimeout(connectAxon, 3000);
+};
+}
+// ->• ->• ->•  SEND ->• ->• ->•
 function sendToAxon(payload) {
-  if (axonSocket?.readyState === WebSocket.OPEN) {
-    axonSocket.send(JSON.stringify(payload));
-    return true;
-  }
-  return false;
+if (axonSocket?.readyState === WebSocket.OPEN) {
+axonSocket.send(JSON.stringify(payload));
+return true;
 }
-
-// â•â•â• HANDLE EVENTS â•â•â•
+return false;
+}
+// ->• ->• ->•  HANDLE EVENTS ->• ->• ->•
 function handleAxonEvent(event) {
-  if (!event?.type) return;
-  switch(event.type) {
-    case "ChatResponse":
-      // âœ… Scoate streaming + typing Ã®nainte de a afiÈ™a rÄƒspunsul
-      document.querySelector(".chat-msg.ai.streaming")?.remove();
-      const typing = document.querySelector(".typing-indicator");
-      if (typing) typing.closest(".chat-msg")?.remove();
-      addMsg("ai", event.payload.text);
-      break;
-    case "ChatToken":
-      // âœ… Rust trimite { token }, NU { text }
-      appendStreamingToken(event.payload.token);
-      break;
-    case "LogLine":
-    case "BuildFinished":
-      console.log(event.type, event.payload);
-      break;
-  }
+if (!event?.type) return;
+switch(event.type) {
+case "ChatResponse":
+document.querySelector(".chat-msg.ai.streaming")?.remove();
+const typing = document.querySelector(".typing-indicator");
+if (typing) typing.closest(".chat-msg")?.remove();
+addMsg("ai", event.payload.text);
+break;
+case "ChatToken":
+appendStreamingToken(event.payload.token);
+break;
+case "LogLine":
+case "BuildFinished":
+console.log(event.type, event.payload);
+break;
 }
-
-// â•â•â• STREAMING â•â•â•
+}
+// ->• ->• ->•  STREAMING ->€” 100% SAFE ->• ->• ->•
 function appendStreamingToken(token) {
-  const container = document.getElementById("chat-messages");
-  if (!container) return;
-  let last = container.querySelector(".chat-msg.ai.streaming");
-  if (!last) {
-    last = document.createElement("div");
-    last.className = "chat-msg ai streaming";
-    last.textContent = '<div class="msg-avatar ai">â¬¡</div><div><div class="msg-bubble"></div></div>';
-    container.appendChild(last);
-  }
-  last.querySelector(".msg-bubble").innerHTML += token;
-  container.scrollTop = container.scrollHeight;
+const container = document.getElementById("chat-messages");
+if (!container) return;
+let last = container.querySelector(".chat-msg.ai.streaming");
+if (!last) {
+last = document.createElement("div");
+last.className = "chat-msg ai streaming";
+last.innerHTML = '<div class="msg-avatar ai"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg></div><div><div class="msg-bubble"></div></div>';
+container.appendChild(last);
 }
-
-// â•â•â• INIT â•â•â•
+// ðŸ”’ SECURITY: textContent previne XSS la streaming
+last.querySelector(".msg-bubble").textContent += token;
+container.scrollTop = container.scrollHeight;
+}
+// ->• ->• ->•  INIT ->• ->• ->•
 document.addEventListener("DOMContentLoaded", connectAxon);
 </script>
 </body>
