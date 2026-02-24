@@ -1,7 +1,7 @@
-// ═══════════════════════════════════════════════════════════════
-// AXON UI → Engine WebSocket Client (Production Ready)
+﻿// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// AXON UI â†’ Engine WebSocket Client (Production Ready)
 // Connects your HTML dashboard to the real Rust backend
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class AxonEngineClient {
   constructor() {
@@ -13,12 +13,12 @@ class AxonEngineClient {
   }
 
   connect(url = 'ws://127.0.0.1:7878/ws') {
-    console.log('🔌 Connecting to AXON engine...', url);
+    console.log('ðŸ”Œ Connecting to AXON engine...', url);
 
     this.socket = new WebSocket(url);
 
     this.socket.onopen = () => {
-      console.log('✅ Connected to AXON engine');
+      console.log('âœ… Connected to AXON engine');
       this.isConnected = true;
       this.updateConnectionStatus(true);
       
@@ -39,11 +39,11 @@ class AxonEngineClient {
     };
 
     this.socket.onerror = (error) => {
-      console.error('❌ WebSocket error:', error);
+      console.error('âŒ WebSocket error:', error);
     };
 
     this.socket.onclose = () => {
-      console.log('🔌 Disconnected from engine. Reconnecting...');
+      console.log('ðŸ”Œ Disconnected from engine. Reconnecting...');
       this.isConnected = false;
       this.updateConnectionStatus(false);
       setTimeout(() => this.connect(url), this.reconnectDelay);
@@ -56,7 +56,7 @@ class AxonEngineClient {
     if (this.isConnected && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(message);
     } else {
-      console.warn('⚠️ Not connected, queuing message:', type);
+      console.warn('âš ï¸ Not connected, queuing message:', type);
       this.pendingMessages.push(message);
     }
   }
@@ -131,9 +131,9 @@ class AxonEngineClient {
     }
   }
 
-  // ═══ Initial State ═══
+  // â•â•â• Initial State â•â•â•
   handleInitialState(state) {
-    console.log('📦 Received initial state:', state);
+    console.log('ðŸ“¦ Received initial state:', state);
 
     // Update session info
     if (state.session_id) {
@@ -166,7 +166,7 @@ class AxonEngineClient {
     }
   }
 
-  // ═══ System Metrics ═══
+  // â•â•â• System Metrics â•â•â•
   handleSystemMetrics(metrics) {
     // Update CPU
     const cpuEl = document.getElementById('cpu-top');
@@ -187,7 +187,7 @@ class AxonEngineClient {
     if (ramEl) ramEl.textContent = metrics.ram_gb.toFixed(1) + 'G';
   }
 
-  // ═══ Log Lines ═══
+  // â•â•â• Log Lines â•â•â•
   handleLogLine(log) {
     const panel = document.getElementById('log-panel');
     if (!panel) return;
@@ -197,7 +197,7 @@ class AxonEngineClient {
 
     const line = document.createElement('div');
     line.className = 'log-line';
-    line.innerHTML = `
+    line.textContent = `
       <span class="ll-time">${log.time}</span>
       <span class="ll-src ${sourceClass}">${log.source}</span>
       <span class="ll-text ${levelClass}">${this.escapeHtml(log.message)}</span>
@@ -214,13 +214,13 @@ class AxonEngineClient {
     }
   }
 
-  // ═══ Build System ═══
+  // â•â•â• Build System â•â•â•
   handleBuildStarted(build) {
-    console.log('🔨 Build started:', build.project);
+    console.log('ðŸ”¨ Build started:', build.project);
     // Update UI build indicator
     const statusPill = document.querySelector('.status-pill.warn');
     if (statusPill) {
-      statusPill.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--yellow);animation:pulse 2s infinite"></span>BUILDING';
+      statusPill.textContent = '<span style="width:6px;height:6px;border-radius:50%;background:var(--yellow);animation:pulse 2s infinite"></span>BUILDING';
     }
   }
 
@@ -233,7 +233,7 @@ class AxonEngineClient {
 
     const line = document.createElement('div');
     line.className = 'log-line';
-    line.innerHTML = `
+    line.textContent = `
       <span class="ll-time">${time}</span>
       <span class="ll-src bld">BLD</span>
       <span class="ll-text">${this.escapeHtml(log.line)}</span>
@@ -244,16 +244,16 @@ class AxonEngineClient {
   }
 
   handleBuildFinished(build) {
-    console.log('🔨 Build finished:', build);
+    console.log('ðŸ”¨ Build finished:', build);
     
     const statusPill = document.querySelector('.status-pill.warn');
     if (statusPill) {
       if (build.success) {
         statusPill.classList.remove('warn');
         statusPill.classList.add('online');
-        statusPill.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal)"></span>BUILD OK';
+        statusPill.textContent = '<span style="width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal)"></span>BUILD OK';
       } else {
-        statusPill.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--red)"></span>BUILD FAIL';
+        statusPill.textContent = '<span style="width:6px;height:6px;border-radius:50%;background:var(--red)"></span>BUILD FAIL';
       }
     }
 
@@ -265,7 +265,7 @@ class AxonEngineClient {
     }
   }
 
-  // ═══ AI Chat ═══
+  // â•â•â• AI Chat â•â•â•
   handleChatResponse(response) {
     const typing = document.querySelector('.typing-indicator');
     if (typing) {
@@ -292,14 +292,14 @@ class AxonEngineClient {
       .replace(/\n/g, '<br>');
 
     const avatar = role === 'ai' ? 
-      '<div class="msg-avatar ai">⬡</div>' : 
-      '<div class="msg-avatar user-av">▶</div>';
+      '<div class="msg-avatar ai">â¬¡</div>' : 
+      '<div class="msg-avatar user-av">â–¶</div>';
 
     const modelBadge = model ? `<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--dim);margin-top:2px;">via ${model}</div>` : '';
 
     const div = document.createElement('div');
     div.className = `chat-msg ${role}`;
-    div.innerHTML = `
+    div.textContent = `
       ${avatar}
       <div>
         <div class="msg-bubble">${html}</div>
@@ -312,9 +312,9 @@ class AxonEngineClient {
     container.scrollTop = container.scrollHeight;
   }
 
-  // ═══ RAG ═══
+  // â•â•â• RAG â•â•â•
   handleRagIndexComplete(data) {
-    console.log('📚 RAG indexing complete:', data.total_files);
+    console.log('ðŸ“š RAG indexing complete:', data.total_files);
     
     const el = document.getElementById('indexed-val');
     if (el) el.textContent = data.total_files.toLocaleString();
@@ -324,7 +324,7 @@ class AxonEngineClient {
   }
 
   handleRagSearchResult(data) {
-    console.log('🔍 RAG search results:', data);
+    console.log('ðŸ” RAG search results:', data);
     
     const resultsPanel = document.getElementById('rag-results');
     const resultsBody = document.getElementById('rag-results-body');
@@ -332,10 +332,10 @@ class AxonEngineClient {
     if (!resultsBody) return;
 
     resultsPanel.style.display = 'flex';
-    resultsBody.innerHTML = '';
+    resultsBody.textContent = '';
 
     if (data.results.length === 0) {
-      resultsBody.innerHTML = '<div style="color:var(--dim);padding:10px;">No results found</div>';
+      resultsBody.textContent = '<div style="color:var(--dim);padding:10px;">No results found</div>';
       return;
     }
 
@@ -343,8 +343,8 @@ class AxonEngineClient {
       const div = document.createElement('div');
       div.style.cssText = 'margin-top:8px;padding:8px;background:var(--bg3);border-radius:4px;border:1px solid var(--border);font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text);line-height:1.7;';
       
-      div.innerHTML = `
-        <div style="color:var(--teal);margin-bottom:4px;">📄 ${result.file}${result.line ? ':' + result.line : ''} (score: ${result.score.toFixed(2)})</div>
+      div.textContent = `
+        <div style="color:var(--teal);margin-bottom:4px;">ðŸ“„ ${result.file}${result.line ? ':' + result.line : ''} (score: ${result.score.toFixed(2)})</div>
         <div>${this.escapeHtml(result.chunk)}</div>
       `;
       
@@ -352,7 +352,7 @@ class AxonEngineClient {
     });
   }
 
-  // ═══ Alerts ═══
+  // â•â•â• Alerts â•â•â•
   handleAlertCreated(alert) {
     this.renderAlert(alert);
   }
@@ -375,22 +375,22 @@ class AxonEngineClient {
     div.dataset.alertId = alert.id;
 
     const iconMap = {
-      critical: '🔴',
-      warn: '🟡',
-      info: '🔵',
-      ok: '🟢'
+      critical: 'ðŸ”´',
+      warn: 'ðŸŸ¡',
+      info: 'ðŸ”µ',
+      ok: 'ðŸŸ¢'
     };
 
-    div.innerHTML = `
-      <div class="ac-icon">${iconMap[alert.severity] || '⚪'}</div>
+    div.textContent = `
+      <div class="ac-icon">${iconMap[alert.severity] || 'âšª'}</div>
       <div class="ac-body">
         <div class="ac-title">${this.escapeHtml(alert.title)}</div>
         <div class="ac-msg">${this.escapeHtml(alert.message)}</div>
         ${alert.details ? `<div class="ac-log">${this.escapeHtml(alert.details)}</div>` : ''}
         <div class="ac-actions">
-          <button class="ac-btn teal" onclick="axon.applyFix('${alert.id}')">⚡ APPLY FIX</button>
-          <button class="ac-btn ghost" onclick="switchPage('chat')">◎ Ask AI</button>
-          <button class="ac-btn red" onclick="axon.dismissAlert('${alert.id}')">⊘ DISMISS</button>
+          <button class="ac-btn teal" onclick="axon.applyFix('${alert.id}')">âš¡ APPLY FIX</button>
+          <button class="ac-btn ghost" onclick="switchPage('chat')">â—Ž Ask AI</button>
+          <button class="ac-btn red" onclick="axon.dismissAlert('${alert.id}')">âŠ˜ DISMISS</button>
         </div>
       </div>
     `;
@@ -398,7 +398,7 @@ class AxonEngineClient {
     return div;
   }
 
-  // ═══ Workers ═══
+  // â•â•â• Workers â•â•â•
   handleWorkerStatus(worker) {
     this.updateWorkerInList(worker);
   }
@@ -407,7 +407,7 @@ class AxonEngineClient {
     const workerList = document.querySelector('.worker-list');
     if (!workerList) return;
 
-    workerList.innerHTML = '';
+    workerList.textContent = '';
 
     workers.forEach(worker => {
       const row = this.createWorkerRow(worker);
@@ -438,7 +438,7 @@ class AxonEngineClient {
     const healthClass = worker.health === 'RUNNING' ? 'run' : 
                        worker.health === 'ERROR' ? 'err' : 'idle';
 
-    div.innerHTML = `
+    div.textContent = `
       <div class="w-dot ${healthClass}"></div>
       <div class="w-name">${worker.name}</div>
       <div class="w-status ${healthClass}">${worker.health}</div>
@@ -447,18 +447,18 @@ class AxonEngineClient {
     return div;
   }
 
-  // ═══ Telegram ═══
+  // â•â•â• Telegram â•â•â•
   handleTelegramMessage(msg) {
     const feed = document.getElementById('tg-feed');
     if (!feed) return;
 
     const div = document.createElement('div');
     div.className = 'tg-msg';
-    div.innerHTML = `
+    div.textContent = `
       <div class="tg-icon">${msg.icon}</div>
       <div class="tg-body">
         <div class="tg-text">${this.escapeHtml(msg.text)}</div>
-        <div class="tg-meta">${msg.timestamp} · AXON</div>
+        <div class="tg-meta">${msg.timestamp} Â· AXON</div>
       </div>
     `;
 
@@ -470,14 +470,14 @@ class AxonEngineClient {
     }
   }
 
-  // ═══ Helper Methods ═══
+  // â•â•â• Helper Methods â•â•â•
   updateConnectionStatus(connected) {
     const indicator = document.querySelector('.status-pill.online');
     if (indicator) {
       if (connected) {
-        indicator.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite"></span>ONLINE';
+        indicator.textContent = '<span style="width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite"></span>ONLINE';
       } else {
-        indicator.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--red)"></span>OFFLINE';
+        indicator.textContent = '<span style="width:6px;height:6px;border-radius:50%;background:var(--red)"></span>OFFLINE';
         indicator.classList.remove('online');
         indicator.classList.add('warn');
       }
@@ -509,7 +509,7 @@ class AxonEngineClient {
     return div.innerHTML;
   }
 
-  // ═══ Commands to Engine ═══
+  // â•â•â• Commands to Engine â•â•â•
   sendChat(message) {
     this.send('Chat', { message });
     this.addChatMessage('user', message);
@@ -522,7 +522,7 @@ class AxonEngineClient {
 
   applyFix(alertId) {
     this.send('ApplyFix', { alert_id: alertId });
-    console.log('⚡ Applying fix:', alertId);
+    console.log('âš¡ Applying fix:', alertId);
   }
 
   searchRag(query) {
@@ -545,8 +545,8 @@ class AxonEngineClient {
 
     const div = document.createElement('div');
     div.className = 'chat-msg ai';
-    div.innerHTML = `
-      <div class="msg-avatar ai">⬡</div>
+    div.textContent = `
+      <div class="msg-avatar ai">â¬¡</div>
       <div>
         <div class="msg-bubble">
           <div class="typing-indicator">
@@ -563,9 +563,9 @@ class AxonEngineClient {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Initialize global AXON client
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 const axon = new AxonEngineClient();
 
 // Connect when page loads
@@ -573,9 +573,9 @@ document.addEventListener('DOMContentLoaded', () => {
   axon.connect();
 });
 
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Update UI functions to use real engine
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function sendMessage() {
   const input = document.getElementById('chat-input');
@@ -607,3 +607,4 @@ function ragSearch(query) {
 }
 
 // Keep existing page switching, clock, etc...
+
